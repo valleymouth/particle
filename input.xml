@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input>
+  <count>1000</count>
+  <cutoff>0.1</cutoff>
+  <lower>
+    <x>0</x>
+    <y>0</y>
+    <z>0</z>
+  </lower>
+  <upper>
+    <x>1</x>
+    <y>1</y>
+    <z>1</z>
+  </upper>
+  <cell_count>
+    <x>10</x>
+    <y>10</y>
+    <z>10</z>
+  </cell_count>
+</input>
