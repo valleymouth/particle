@@ -7,12 +7,12 @@
 #include <particle/geometry/aabb.hpp>
 #include <particle/geometry/elem.hpp>
 #include <particle/geometry/is_empty.hpp>
-#include <particle/geometry/is_in.hpp>
-#include <particle/geometry/lower.hpp>
+#include <particle/geometry/contains.hpp>
+#include <particle/geometry/min.hpp>
 #include <particle/geometry/minus.hpp>
 #include <particle/geometry/plus.hpp>
 #include <particle/geometry/size.hpp>
-#include <particle/geometry/upper.hpp>
+#include <particle/geometry/max.hpp>
 
 // Std headers
 #include <array>
@@ -68,32 +68,32 @@ BOOST_AUTO_TEST_CASE(minus_test)
   BOOST_CHECK_CLOSE(elem<2>(array3), -3.0, tol);
 }
 
-BOOST_AUTO_TEST_CASE(lower_test)
+BOOST_AUTO_TEST_CASE(min_test)
 {
   using particle::geometry::aabb;
   using particle::geometry::elem;
-  using particle::geometry::lower;
+  using particle::geometry::min;
   
   aabb<std::array<double, 3>> box(
     {-2.0, 3.0, -5.0}
     , {1.0, 5.0, 1.0});
-  std::array<double, 3> l = lower(box);
+  std::array<double, 3> l = min(box);
   const double tol = 1e-20;
   BOOST_CHECK_CLOSE(elem<0>(l), -2.0, tol);
   BOOST_CHECK_CLOSE(elem<1>(l), 3.0, tol);
   BOOST_CHECK_CLOSE(elem<2>(l), -5.0, tol);
 }
 
-BOOST_AUTO_TEST_CASE(upper_test)
+BOOST_AUTO_TEST_CASE(max_test)
 {
   using particle::geometry::aabb;
   using particle::geometry::elem;
-  using particle::geometry::upper;
+  using particle::geometry::max;
   
   aabb<std::array<double, 3>> box(
     {-2.0, 3.0, -5.0}
     , {1.0, 5.0, 1.0});
-  std::array<double, 3> u = upper(box);
+  std::array<double, 3> u = max(box);
   const double tol = 1e-20;
   BOOST_CHECK_CLOSE(elem<0>(u), 1.0, tol);
   BOOST_CHECK_CLOSE(elem<1>(u), 5.0, tol);
@@ -116,18 +116,18 @@ BOOST_AUTO_TEST_CASE(is_empty_test)
   BOOST_CHECK_EQUAL(is_empty(box1), true);
 }
 
-BOOST_AUTO_TEST_CASE(is_in_test)
+BOOST_AUTO_TEST_CASE(contains_test)
 {
   using particle::geometry::aabb;
-  using particle::geometry::is_in;
+  using particle::geometry::contains;
 
   aabb<std::array<double, 3>> box(
     {-2.0, 3.0, -5.0}
     , {1.0, 5.0, 1.0});
   std::array<double, 3> p0 = {-1.0, 4.0, -2.0};
-  BOOST_CHECK_EQUAL(is_in(box, p0), true);
+  BOOST_CHECK_EQUAL(contains(box, p0), true);
   std::array<double, 3> p1 = {-1.0, 1.0, -2.0};
-  BOOST_CHECK_EQUAL(is_in(box, p1), false);
+  BOOST_CHECK_EQUAL(contains(box, p1), false);
 }
 
 BOOST_AUTO_TEST_CASE(size_test)

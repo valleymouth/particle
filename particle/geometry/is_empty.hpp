@@ -2,8 +2,8 @@
 
 // Local headers
 #include "dimension.hpp"
-#include "lower.hpp"
-#include "upper.hpp"
+#include "max.hpp"
+#include "min.hpp"
 
 namespace particle
 {
@@ -17,7 +17,7 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb)
 	{
-	  return elem<N>(lower(aabb)) >= elem<N>(upper(aabb))
+	  return elem<N>(min(aabb)) >= elem<N>(max(aabb))
 	    || is_empty_impl<AABB, N - 1>::call(aabb);
 	}
       };
@@ -28,7 +28,7 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb)
 	{
-	  return elem<0>(lower(aabb)) >= elem<0>(upper(aabb));
+	  return elem<0>(min(aabb)) >= elem<0>(max(aabb));
 	}
       };
     } // namespace detail

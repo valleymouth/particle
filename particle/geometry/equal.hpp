@@ -62,12 +62,12 @@ namespace particle
 	{
 	  return detail::equal_impl<
 	    typename boost::remove_cv_ref<
-	      decltype(lower(lhs))>::type
-	    , tags::vector_tag>::call(lower(lhs), lower(rhs))
+	      decltype(min(lhs))>::type
+	    , tags::vector_tag>::call(min(lhs), min(rhs))
 	    && detail::equal_impl<
 	      typename boost::remove_cv_ref<
-		decltype(upper(lhs))>::type
-	    , tags::vector_tag>::call(upper(lhs), upper(rhs));
+		decltype(max(lhs))>::type
+	    , tags::vector_tag>::call(max(lhs), max(rhs));
 	}
       };
     } // namespace detail
