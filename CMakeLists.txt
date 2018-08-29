@@ -14,4 +14,5 @@ find_package(CUDA)
 cuda_add_executable(verlet_list src/verlet_list.cpp)
 target_link_libraries(verlet_list ${Kokkos_LIBRARIES} ${Boost_LIBRARIES})
 
+enable_testing()
 add_subdirectory(libs/geometry)

@@ -2,10 +2,10 @@
 
 // Local headers
 #include "dimension.hpp"
+#include "elem.hpp"
 
 // Particle headers
 #include "../config.hpp"
-
 
 namespace particle
 {

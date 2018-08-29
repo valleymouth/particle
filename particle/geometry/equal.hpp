@@ -1,8 +1,9 @@
 #pragma once
 
 // Local headers
-#include "tag.hpp"
-#include "tags.hpp"
+#include "elem.hpp"
+#include "max.hpp"
+#include "min.hpp"
 
 // Particle headers
 #include "../config.hpp"
