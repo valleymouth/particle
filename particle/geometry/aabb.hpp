@@ -8,6 +8,7 @@
 #include "../config.hpp"
 
 // Boost headers
+#include <boost/fusion/algorithm/auxiliary/copy.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -23,12 +24,6 @@ namespace particle
 
       Point min;
       Point max;
-
-      // PARTICLE_INLINE_FUNCTION
-      // aabb(): lower(zero<Point>()), upper(zero<Point>()) {}
-
-      // PARTICLE_INLINE_FUNCTION
-      // aabb(const Point &l, const Point &u): min(l), max(u) {}
 
       bool operator==(const aabb &bb) const
       {
