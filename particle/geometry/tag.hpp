@@ -1,6 +1,10 @@
 #pragma once
 
+// Local headers
+#include "tags.hpp"
+
 // Boost headers
+#include <boost/fusion/support/is_sequence.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
 namespace particle
@@ -11,10 +15,13 @@ namespace particle
 
     namespace traits
     {
-      template <class>
+      template <class T>
       struct tag
       {
-	typedef untagged type;
+        typedef typename boost::mpl::if_<
+          boost::fusion::traits::is_sequence<T>
+          , tags::vector_tag // boost fusion sequences are vectors
+          , untagged>::type type;
       };
     }
 

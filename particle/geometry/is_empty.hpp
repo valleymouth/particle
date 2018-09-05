@@ -1,9 +1,13 @@
 #pragma once
 
 // Local headers
-#include "dimension.hpp"
 #include "max.hpp"
 #include "min.hpp"
+#include "point_type.hpp"
+
+// Boost headers
+#include <boost/fusion/sequence/intrinsic/at_c.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 
 namespace particle
 {
@@ -17,7 +21,8 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb)
 	{
-	  return elem<N>(min(aabb)) >= elem<N>(max(aabb))
+          using boost::fusion::at_c;
+	  return at_c<N>(min(aabb)) >= at_c<N>(max(aabb))
 	    || is_empty_impl<AABB, N - 1>::call(aabb);
 	}
       };
@@ -28,7 +33,8 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb)
 	{
-	  return elem<0>(min(aabb)) >= elem<0>(max(aabb));
+          using boost::fusion::at_c;
+	  return at_c<0>(min(aabb)) >= at_c<0>(max(aabb));
 	}
       };
     } // namespace detail
@@ -38,7 +44,7 @@ namespace particle
     bool is_empty(const AABB &aabb)
     {
       return detail::is_empty_impl<
-	AABB, traits::dimension<AABB>::type::value - 1>::call(aabb);
+	AABB, boost::fusion::result_of::size<typename point_type<AABB>::type>::type::value - 1>::call(aabb);
     }
   } // namespace geometry
 } // namespace particle

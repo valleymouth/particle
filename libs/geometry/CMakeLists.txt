@@ -11,13 +11,10 @@ if(CUDA_FOUND)
   set_source_files_properties(src/verlet_list.cpp PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
 endif()
 
-add_executable(elem_test test/elem.cpp)
-target_link_libraries(elem_test ${Boost_LIBRARIES})
-add_test(NAME elem_test COMMAND elem_test)
-
 add_executable(plus_test test/plus.cpp)
 target_link_libraries(plus_test ${Boost_LIBRARIES})
 add_test(NAME plus_test COMMAND plus_test)
+
 add_executable(minus_test test/minus.cpp)
 target_link_libraries(minus_test ${Boost_LIBRARIES})
 add_test(NAME minus_test COMMAND minus_test)
@@ -45,3 +42,11 @@ add_test(NAME size_test COMMAND size_test)
 add_executable(equal_test test/equal.cpp)
 target_link_libraries(equal_test ${Boost_LIBRARIES})
 add_test(NAME equal_test COMMAND equal_test)
+
+add_executable(is_vector_test test/is_vector.cpp)
+target_link_libraries(is_vector_test ${Boost_LIBRARIES})
+add_test(NAME is_vector_test COMMAND is_vector_test)
+
+add_executable(is_aabb_test test/is_aabb.cpp)
+target_link_libraries(is_aabb_test ${Boost_LIBRARIES})
+add_test(NAME is_aabb_test COMMAND is_aabb_test)

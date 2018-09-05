@@ -1,9 +1,12 @@
 #pragma once
 
 // Local headers
-#include "dimension.hpp"
 #include "max.hpp"
 #include "min.hpp"
+#include "point_type.hpp"
+
+// Boost headers
+#include <boost/fusion/sequence/intrinsic/at_c.hpp>
 
 namespace particle
 {
@@ -17,8 +20,9 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb, const Point &p)
 	{
-	  return elem<N>(min(aabb)) <= elem<N>(p)
-	    && elem<N>(max(aabb)) > elem<N>(p)
+          using boost::fusion::at_c;
+	  return at_c<N>(min(aabb)) <= at_c<N>(p)
+	    && at_c<N>(max(aabb)) > at_c<N>(p)
 	    && contains_impl<AABB, Point, N - 1>::call(aabb, p);
 	}
       };
@@ -29,8 +33,9 @@ namespace particle
 	PARTICLE_INLINE_FUNCTION
 	static bool call(const AABB &aabb, const Point &p)
 	{
-	  return elem<0>(min(aabb)) <= elem<0>(p)
-	    && elem<0>(max(aabb)) > elem<0>(p);
+          using boost::fusion::at_c;
+	  return at_c<0>(min(aabb)) <= at_c<0>(p)
+	    && at_c<0>(max(aabb)) > at_c<0>(p);
 	}
       };
     }
@@ -39,10 +44,11 @@ namespace particle
     PARTICLE_INLINE_FUNCTION
     bool contains(const AABB &aabb, const Point &p)
     {
+      using boost::fusion::result_of::size;
       return detail::contains_impl<
 	AABB
 	, Point
-	, traits::dimension<AABB>::type::value - 1>::call(aabb, p);
+	, size<typename point_type<AABB>::type>::type::value - 1>::call(aabb, p);
     }
   }
 }

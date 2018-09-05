@@ -1,11 +1,15 @@
 #pragma once
 
-// Local headers
-#include "dimension.hpp"
-#include "elem.hpp"
-
 // Particle headers
 #include "../config.hpp"
+
+// Boost headers
+#include <boost/fusion/algorithm/transformation/transform.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
+
+// Std headers
+#include <type_traits>
+#include <utility>
 
 namespace particle
 {
@@ -13,48 +17,39 @@ namespace particle
   {
     namespace detail
     {
-      template <class T, std::size_t N>
-      struct plus_impl_recursive
+      struct plus
       {
-	PARTICLE_INLINE_FUNCTION
-	static void call(const T &lhs, const T &rhs, T &result)
-	{
-	  elem<N>(result) = elem<N>(lhs) + elem<N>(rhs);
-	  plus_impl_recursive<T, N - 1>::call(lhs, rhs, result);
-	}
-      };
+        template <class> struct result;
 
-      template <class T>
-      struct plus_impl_recursive<T, 0>
-      {
-	PARTICLE_INLINE_FUNCTION
-	static void call(const T &lhs, const T &rhs, T &result)
-	{
-	  elem<0>(result) = elem<0>(lhs) + elem<0>(rhs);
-	}
-      };
-
-      template <class T>
-      struct plus_impl
-      {
-	PARTICLE_INLINE_FUNCTION
-	static T call(const T &lhs, const T &rhs)
-	{
-	  T result;
-	  plus_impl_recursive<
-	    T
-	    , dimension<T>::type::value - 1
-	    >::call(lhs, rhs, result);
-	  return result;
-	}
+        template <class F, class T0, class T1>
+        struct result<F(T0, T1)>
+        {
+          typedef decltype(std::declval<T0>() + std::declval<T1>()) type;
+        };
+        
+        template <class T0, class T1>
+        PARTICLE_INLINE_FUNCTION
+        auto operator()(const T0& lhs, const T1& rhs) const -> decltype(lhs + rhs)
+        {
+          return lhs + rhs;
+        }
       };
     }
 
-    template <class T>
+    template <
+      class T0
+      , class T1
+      , typename std::enable_if<
+          boost::fusion::result_of::size<T0>::value
+          == boost::fusion::result_of::size<T1>::value
+          , int
+          >::type = 0
+      >
     PARTICLE_INLINE_FUNCTION
-    T plus(const T &lhs, const T &rhs)
+    auto plus(const T0 &lhs, const T1 &rhs) ->
+      decltype(boost::fusion::transform(lhs, rhs, detail::plus())) 
     {
-      return detail::plus_impl<T>::call(lhs, rhs);
+      return boost::fusion::transform(lhs, rhs, detail::plus());
     }
   } // namespace geometry
 } // namespace particle

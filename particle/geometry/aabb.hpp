@@ -1,24 +1,16 @@
 #pragma once
 
 // Local headers
-#include "dimension.hpp"
-#include "elem.hpp"
 #include "equal.hpp"
 //#include "zero.hpp"
 
 // Particle headers
 #include "../config.hpp"
 
-// Cuda headers
-#include <thrust/functional.h>
-
 // Boost headers
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
-
-// Std headers
-#include <algorithm>
 
 namespace particle
 {
@@ -35,8 +27,8 @@ namespace particle
       // PARTICLE_INLINE_FUNCTION
       // aabb(): lower(zero<Point>()), upper(zero<Point>()) {}
 
-      PARTICLE_INLINE_FUNCTION
-      aabb(const Point &l, const Point &u): min(l), max(u) {}
+      // PARTICLE_INLINE_FUNCTION
+      // aabb(const Point &l, const Point &u): min(l), max(u) {}
 
       bool operator==(const aabb &bb) const
       {
@@ -59,14 +51,6 @@ namespace particle
       template <class Point>
       struct tag<aabb<Point> >
 	: boost::mpl::identity<tags::aabb_tag>
-      {};
-
-      template <class>
-      struct dimension;
-
-      template <class Point>
-      struct dimension<aabb<Point>>
-	: traits::dimension<Point>
       {};
 
       template <class, class>
@@ -106,6 +90,14 @@ namespace particle
 	  return bb.max;
 	}
       };
+
+      template <class>
+      struct point_type;
+
+      template <class Point>
+      struct point_type<aabb<Point>>
+        : boost::mpl::identity<Point>
+      {};
     } // namespace traits
   } // namespace geometry
 } // namespace particle
