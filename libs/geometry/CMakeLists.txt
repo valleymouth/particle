@@ -28,7 +28,6 @@ target_link_libraries(max_test ${Boost_LIBRARIES})
 add_test(NAME max_test COMMAND max_test)
 
 add_executable(is_empty_test test/is_empty.cpp)
-target_compile_options(is_empty_test PUBLIC --expt-extended-lambda)
 target_link_libraries(is_empty_test ${Boost_LIBRARIES})
 add_test(NAME is_empty_test COMMAND is_empty_test)
 
@@ -39,3 +38,11 @@ add_test(NAME contains_test COMMAND contains_test)
 add_executable(size_test test/size.cpp)
 target_link_libraries(size_test ${Boost_LIBRARIES})
 add_test(NAME size_test COMMAND size_test)
+
+add_executable(plus_operator_test test/plus_operator.cpp)
+target_link_libraries(plus_operator_test ${Boost_LIBRARIES})
+add_test(NAME plus_operator_test COMMAND plus_operator_test)
+
+add_executable(minus_operator_test test/minus_operator.cpp)
+target_link_libraries(minus_operator_test ${Boost_LIBRARIES})
+add_test(NAME minus_operator_test COMMAND minus_operator_test)

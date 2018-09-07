@@ -12,11 +12,11 @@ namespace particle
 {
   namespace geometry
   {
-    template <class AABB>
+    template <class Box>
     PARTICLE_INLINE_FUNCTION
-    auto size(const AABB &aabb) -> decltype(minus(max(aabb), min(aabb)))
+    auto size(const Box &box) -> decltype(minus(max(box), min(box)))
     {
-      return minus(max(aabb), min(aabb));
+      return minus(max(box), min(box));
     }
   }
 }
