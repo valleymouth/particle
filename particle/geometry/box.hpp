@@ -5,14 +5,28 @@
 
 // Boost headers
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_const.hpp>
+
+// Std headers
+#include <type_traits>
 
 namespace particle
 {
   namespace geometry
   {
-    template <class Min, class Max = Min>
+    template <
+      class Min
+      , class Max = Min
+      , typename std::enable_if<
+          boost::fusion::traits::is_sequence<Min>::value &&
+          boost::fusion::traits::is_sequence<Max>::value &&
+          (boost::fusion::result_of::size<Min>::value
+           == boost::fusion::result_of::size<Max>::value)
+          , int
+          >::type = 0
+      >
     struct box
     {
       typedef Min min_type;
@@ -21,14 +35,14 @@ namespace particle
       Min min;
       Max max;
 
-      bool operator==(const box &box) const
+      bool operator==(const box<Min, Max> &box) const
       {
 	if (min = box.min && max == box.max)
 	  return true;
 	return false;
       }
 
-      bool operator!=(const box &box) const
+      bool operator!=(const box<Min, Max> &box) const
       {
 	return !((*this) == box);
       }
