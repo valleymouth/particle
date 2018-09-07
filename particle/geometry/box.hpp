@@ -35,6 +35,9 @@ namespace particle
       Min min;
       Max max;
 
+      box(Min min, Max max): min(min), max(max)
+      {}
+      
       bool operator==(const box<Min, Max> &box) const
       {
 	if (min = box.min && max == box.max)

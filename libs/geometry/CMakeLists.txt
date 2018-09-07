@@ -46,3 +46,7 @@ add_test(NAME plus_operator_test COMMAND plus_operator_test)
 add_executable(minus_operator_test test/minus_operator.cpp)
 target_link_libraries(minus_operator_test ${Boost_LIBRARIES})
 add_test(NAME minus_operator_test COMMAND minus_operator_test)
+
+add_executable(make_box_test test/make_box.cpp)
+target_link_libraries(make_box_test ${Boost_LIBRARIES})
+add_test(NAME make_box_test COMMAND make_box_test)
