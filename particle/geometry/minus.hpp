@@ -29,12 +29,12 @@ namespace particle
 
         template <class T0, class T1>
         PARTICLE_INLINE_FUNCTION
-        auto operator()(const T0& lhs, const T1& rhs) const -> decltype(lhs - rhs)
+        auto operator()(T0 const& lhs, T1 const& rhs) const -> decltype(lhs - rhs)
         {
           return lhs - rhs;
         }
       };
-    }
+    } // namespace detail
 
     template <
       class T0
@@ -46,7 +46,7 @@ namespace particle
           >::type = 0
       >
     PARTICLE_INLINE_FUNCTION
-    auto minus(const T0 &lhs, const T1 &rhs) ->
+    auto minus(T0 const& lhs, T1 const& rhs) ->
       decltype(boost::fusion::transform(lhs, rhs, detail::minus()))
     {
       return boost::fusion::transform(lhs, rhs, detail::minus());

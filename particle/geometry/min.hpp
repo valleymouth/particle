@@ -11,20 +11,20 @@ namespace particle
     {
       template <class>
       struct min;
-    }
+    } // namespace traits
 
     template <class T>
     PARTICLE_INLINE_FUNCTION
-    typename traits::min<T>::type min(T &p)
+    typename traits::min<T>::type min(T& p)
     {
       return traits::min<T>::call(p);
     }
 
     template <class T>
     PARTICLE_INLINE_FUNCTION
-    typename traits::min<const T>::type min(const T &p)
+    typename traits::min<T const>::type min(T const& p)
     {
-      return traits::min<const T>::call(p);
+      return traits::min<T const>::call(p);
     }
   } // namespace geometry
 } // namespace particle

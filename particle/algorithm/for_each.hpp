@@ -6,14 +6,11 @@
 #include "../geometry/min.hpp"
 
 // Boost headers
-#include <boost/fusion/container/vector.hpp>
-#include <boost/fusion/container/generation/make_list.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/type_traits.hpp>
 
 namespace particle
 {
@@ -56,15 +53,16 @@ namespace particle
         , boost::mpl::false_
         , Index... index)
       {
+        namespace fu = boost::fusion;
         for(auto i = *min_first; i < *max_first; i++)
         {
           call(
-            boost::fusion::next(min_first)
+            fu::next(min_first)
             , min_last
-            , boost::fusion::next(max_first)
+            , fu::next(max_first)
             , f
-            , boost::fusion::result_of::equal_to<
-            typename boost::fusion::result_of::next<MinFirst>::type
+            , fu::result_of::equal_to<
+            typename fu::result_of::next<MinFirst>::type
             , MinLast>()
             , index...
             , i
@@ -76,19 +74,16 @@ namespace particle
       PARTICLE_INLINE_FUNCTION
       static void call(Box const& box, UnaryFunction f)
       {
+        typedef typename Box::min_type min_type;
+        namespace fu = boost::fusion;
         call(
-          boost::fusion::begin(geometry::min(box))
-          , boost::fusion::end(geometry::min(box))
-          , boost::fusion::begin(max(box))
+          fu::begin(geometry::min(box))
+          , fu::end(geometry::min(box))
+          , fu::begin(max(box))
           , f
-          , boost::fusion::result_of::equal_to<
-          typename boost::fusion::result_of::begin<
-          typename Box::min_type
-          >::type
-          , typename boost::fusion::result_of::end<
-          typename Box::min_type
-          >::type
-          >());
+          , fu::result_of::equal_to<
+          typename fu::result_of::begin<min_type>::type
+          , typename fu::result_of::end<min_type>::type>());
       }
     };
   }

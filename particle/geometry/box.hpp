@@ -38,14 +38,14 @@ namespace particle
       box(Min min, Max max): min(min), max(max)
       {}
       
-      bool operator==(const box<Min, Max> &box) const
+      bool operator==(box<Min, Max> const& box) const
       {
 	if (min = box.min && max == box.max)
 	  return true;
 	return false;
       }
 
-      bool operator!=(const box<Min, Max> &box) const
+      bool operator!=(box<Min, Max> const& box) const
       {
 	return !((*this) == box);
       }
@@ -61,12 +61,12 @@ namespace particle
       {
 	typedef typename boost::mpl::if_<
 	  boost::is_const<Box>
-	  , const typename Box::min_type &
+	  , typename Box::min_type const&
 	  , typename Box::min_type &
 	  >::type type;
       
 	PARTICLE_INLINE_FUNCTION
-	static type call(Box &box)
+	static type call(Box& box)
 	{
 	  return box.min;
 	}
@@ -80,12 +80,12 @@ namespace particle
       {
 	typedef typename boost::mpl::if_<
 	  boost::is_const<Box>
-	  , const typename Box::max_type &
+	  , typename Box::max_type const&
 	  , typename Box::max_type &
 	  >::type type;
       
 	PARTICLE_INLINE_FUNCTION
-	static type call(Box &box)
+	static type call(Box& box)
 	{
 	  return box.max;
 	}
