@@ -50,3 +50,19 @@ add_test(NAME minus_operator_test COMMAND minus_operator_test)
 add_executable(make_box_test test/make_box.cpp)
 target_link_libraries(make_box_test ${Boost_LIBRARIES})
 add_test(NAME make_box_test COMMAND make_box_test)
+
+add_executable(constant_multiply_test test/constant_multiply.cpp)
+target_link_libraries(constant_multiply_test ${Boost_LIBRARIES})
+add_test(NAME constant_multiply_test COMMAND constant_multiply_test)
+
+add_executable(constant_divide_test test/constant_divide.cpp)
+target_link_libraries(constant_divide_test ${Boost_LIBRARIES})
+add_test(NAME constant_divide_test COMMAND constant_divide_test)
+
+add_executable(convert_test test/convert.cpp)
+target_link_libraries(convert_test ${Boost_LIBRARIES})
+add_test(NAME convert_test COMMAND convert_test)
+
+# add_executable(grid_test test/grid.cpp)
+# target_link_libraries(grid_test ${Boost_LIBRARIES})
+# add_test(NAME grid_test COMMAND grid_test)

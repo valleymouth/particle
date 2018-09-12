@@ -23,4 +23,5 @@ target_compile_options(coalesced_bench PUBLIC -lineinfo) # enable source code ma
 target_link_libraries(coalesced_bench ${Kokkos_LIBRARIES} ${Boost_LIBRARIES})
 
 enable_testing()
+add_subdirectory(libs/algorithm)
 add_subdirectory(libs/geometry)
