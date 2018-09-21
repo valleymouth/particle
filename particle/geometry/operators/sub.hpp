@@ -1,7 +1,7 @@
 #pragma once
 
 // Local headers
-#include "../plus.hpp"
+#include "../sub.hpp"
 
 // Boost headers
 #include <boost/fusion/support/is_sequence.hpp>
@@ -22,9 +22,9 @@ namespace particle
           , int
           >::type = 0
       >
-    auto operator+(T0 const& a, T1 const& b) -> decltype(plus(a, b))
+    auto operator-(T0 const& a, T1 const& b) -> decltype(sub(a, b))
     {
-      return plus(a, b);
+      return sub(a, b);
     }
-  }
-}
+  } // namespace geometry
+} // namespace particle

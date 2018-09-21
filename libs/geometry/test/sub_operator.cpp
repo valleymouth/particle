@@ -3,30 +3,30 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
-#include <particle/geometry/operators/plus.hpp>
+#include <particle/geometry/operators/sub.hpp>
 
 // Boost headers
 #include <boost/array.hpp>
 #include <boost/fusion/adapted/boost_array.hpp>
 #include <boost/fusion/sequence/intrinsic/at_c.hpp>
 
-using particle::geometry::operator+;
+using particle::geometry::operator-;
 
-BOOST_AUTO_TEST_CASE(plus_test)
+BOOST_AUTO_TEST_CASE(sub_test)
 {
   using boost::array;
   using boost::fusion::at_c;
 
   array<double, 3> array0 = {1.0, 2.0, 3.0};
   array<double, 3> array1 = {4.0, 5.0, 6.0};
-  auto array2 = array0 + array1;
+  auto array2 = array0 - array1;
   const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array2), 5.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array2), 7.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array2), 9.0, tol);
+  BOOST_CHECK_CLOSE(at_c<0>(array2), -3.0, tol);
+  BOOST_CHECK_CLOSE(at_c<1>(array2), -3.0, tol);
+  BOOST_CHECK_CLOSE(at_c<2>(array2), -3.0, tol);
 }
 
-BOOST_AUTO_TEST_CASE(plus_plus_test)
+BOOST_AUTO_TEST_CASE(sub_sub_test)
 {
   using boost::array;
   using boost::fusion::at_c;
@@ -34,9 +34,9 @@ BOOST_AUTO_TEST_CASE(plus_plus_test)
   array<double, 3> array0 = {1.0, 2.0, 3.0};
   array<double, 3> array1 = {4.0, 5.0, 6.0};
   array<double, 3> array2 = {7.0, 8.0, 9.0};
-  auto array3 = array0 + array1 + array2;
+  auto array3 = array0 - (array1 - array2);
   const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array3), 12.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array3), 15.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array3), 18.0, tol);
+  BOOST_CHECK_CLOSE(at_c<0>(array3), 4.0, tol);
+  BOOST_CHECK_CLOSE(at_c<1>(array3), 5.0, tol);
+  BOOST_CHECK_CLOSE(at_c<2>(array3), 6.0, tol);
 }

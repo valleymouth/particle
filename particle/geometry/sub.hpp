@@ -17,7 +17,7 @@ namespace particle
   {
     namespace detail
     {
-      struct minus
+      struct sub
       {
         template <class> struct result;
 
@@ -46,10 +46,10 @@ namespace particle
           >::type = 0
       >
     PARTICLE_INLINE_FUNCTION
-    auto minus(T0 const& lhs, T1 const& rhs) ->
-      decltype(boost::fusion::transform(lhs, rhs, detail::minus()))
+    auto sub(T0 const& lhs, T1 const& rhs) ->
+      decltype(boost::fusion::transform(lhs, rhs, detail::sub()))
     {
-      return boost::fusion::transform(lhs, rhs, detail::minus());
+      return boost::fusion::transform(lhs, rhs, detail::sub());
     }
   } // namespace geometry
 } // namespace particle

@@ -1,6 +1,6 @@
 #pragma once
 
-// Particle headers
+// Local headers
 #include "../config.hpp"
 
 // Boost headers

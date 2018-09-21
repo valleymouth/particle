@@ -3,7 +3,7 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
-#include <particle/geometry/constant_divide.hpp>
+#include <particle/geometry/sdiv.hpp>
 
 // Boost headers
 #include <boost/array.hpp>
@@ -13,22 +13,22 @@
 
 using particle::geometry::operator/;
 
-BOOST_AUTO_TEST_CASE(constant_divide_test)
+BOOST_AUTO_TEST_CASE(sdiv_test)
 {
-  using particle::geometry::constant_divide;
+  using particle::geometry::sdiv;
   using boost::fusion::at_c;
 
   double array0[] = {3.0, 6.0, 9.0};
-  auto array1 = constant_divide(array0, 3);
+  auto array1 = sdiv(array0, 3);
   const double tol = 1e-20;
   BOOST_CHECK_CLOSE(at_c<0>(array1), 1.0, tol);
   BOOST_CHECK_CLOSE(at_c<1>(array1), 2.0, tol);
   BOOST_CHECK_CLOSE(at_c<2>(array1), 3.0, tol);
 }
 
-BOOST_AUTO_TEST_CASE(constant_divide_operator_test)
+BOOST_AUTO_TEST_CASE(sdiv_operator_test)
 {
-  using particle::geometry::constant_divide;
+  using particle::geometry::sdiv;
   using boost::array;
   using boost::fusion::at_c;
 

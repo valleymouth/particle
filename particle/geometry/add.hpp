@@ -17,7 +17,7 @@ namespace particle
   {
     namespace detail
     {
-      struct plus
+      struct add
       {
         template <class> struct result;
 
@@ -34,7 +34,7 @@ namespace particle
           return lhs + rhs;
         }
       };
-    } // namespace plus
+    } // namespace detail
 
     template <
       class T0
@@ -46,10 +46,10 @@ namespace particle
           >::type = 0
       >
     PARTICLE_INLINE_FUNCTION
-    auto plus(T0 const& lhs, T1 const& rhs) ->
-      decltype(boost::fusion::transform(lhs, rhs, detail::plus())) 
+    auto add(T0 const& lhs, T1 const& rhs) ->
+      decltype(boost::fusion::transform(lhs, rhs, detail::add())) 
     {
-      return boost::fusion::transform(lhs, rhs, detail::plus());
+      return boost::fusion::transform(lhs, rhs, detail::add());
     }
   } // namespace geometry
 } // namespace particle

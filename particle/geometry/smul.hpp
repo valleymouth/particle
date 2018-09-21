@@ -17,12 +17,12 @@ namespace particle
     namespace detail
     {
       template <class T>
-      struct constant_divide
+      struct smul
       {
         T const value;
         
         PARTICLE_INLINE_FUNCTION
-        constant_divide(T const& v): value(v) {}
+        smul(T const& v): value(v) {}
         
         template <class> struct result;
 
@@ -34,9 +34,9 @@ namespace particle
 
         template <class T0>        
         PARTICLE_INLINE_FUNCTION
-        auto operator()(T0 const& lhs) const -> decltype(lhs / value)
+        auto operator()(T0 const& lhs) const -> decltype(lhs * value)
         {
-          return lhs / value;
+          return lhs * value;
         }
       };
     } // namespace detail
@@ -50,10 +50,10 @@ namespace particle
           , int
           >::type = 0
       >
-    auto constant_divide(Sequence const& lhs, T const& rhs)
-      -> decltype(boost::fusion::transform(lhs, detail::constant_divide<T>(rhs)))
+    auto smul(Sequence const& lhs, T const& rhs)
+      -> decltype(boost::fusion::transform(lhs, detail::smul<T>(rhs)))
     {
-      return boost::fusion::transform(lhs, detail::constant_divide<T>(rhs));
+      return boost::fusion::transform(lhs, detail::smul<T>(rhs));
     }
 
     template <
@@ -65,10 +65,25 @@ namespace particle
           , int
           >::type = 0
       >
-    auto operator/(Sequence const& lhs, T const& rhs)
-      -> decltype(constant_divide(lhs, rhs))
+    auto operator*(Sequence const& lhs, T const& rhs)
+      -> decltype(smul(lhs, rhs))
     {
-      return constant_divide(lhs, rhs);
+      return smul(lhs, rhs);
+    }
+
+    template <
+      class T
+      , class Sequence
+      , typename std::enable_if<
+          boost::fusion::traits::is_sequence<Sequence>::value
+          && std::is_arithmetic<T>::value
+          , int
+          >::type = 0
+      >
+    auto operator*(T const& lhs, Sequence const& rhs)
+      -> decltype(smul(rhs, lhs))
+    {
+      return smul(rhs, lhs);
     }
   } // namespace geometry
 } // namespace particle
