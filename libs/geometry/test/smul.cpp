@@ -3,7 +3,7 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
-#include <particle/geometry/smul.hpp>
+#include <particle/geometry/operators/smul.hpp>
 
 // Boost headers
 #include <boost/array.hpp>
