@@ -19,6 +19,7 @@ namespace geometry
         , int
         >::type = 0
     >
+  PARTICLE_INLINE_FUNCTION
   auto operator*(L&& lhs, R&& rhs)
   {
     return mul(std::forward<L>(lhs), std::forward<R>(rhs));

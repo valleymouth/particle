@@ -20,7 +20,7 @@ namespace geometry
         >::type = 0
     >
   PARTICLE_INLINE_FUNCTION
-  decltype(auto) operator-(L&& lhs, R&& rhs)
+  auto operator-(L&& lhs, R&& rhs)
   {
     return sub(std::forward<L>(lhs), std::forward<R>(rhs));
   }

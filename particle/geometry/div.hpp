@@ -9,7 +9,7 @@ namespace geometry
 {
   template <typename L, typename R>
   PARTICLE_INLINE_FUNCTION
-  auto mul(L&& lhs, R&& rhs)
+  auto div(L&& lhs, R&& rhs)
   {
     return transform(
       std::forward<L>(lhs)

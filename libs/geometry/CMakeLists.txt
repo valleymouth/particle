@@ -24,6 +24,14 @@ add_executable(sub_test test/sub.cpp)
 target_link_libraries(sub_test ${Boost_LIBRARIES})
 add_test(NAME sub_test COMMAND sub_test)
 
+add_executable(mul_test test/mul.cpp)
+target_link_libraries(mul_test ${Boost_LIBRARIES})
+add_test(NAME mul_test COMMAND mul_test)
+
+add_executable(div_test test/div.cpp)
+target_link_libraries(div_test ${Boost_LIBRARIES})
+add_test(NAME div_test COMMAND div_test)
+
 add_executable(min_test test/min.cpp)
 target_link_libraries(min_test ${Boost_LIBRARIES})
 add_test(NAME min_test COMMAND min_test)
@@ -51,6 +59,14 @@ add_test(NAME add_operator_test COMMAND add_operator_test)
 add_executable(sub_operator_test test/sub_operator.cpp)
 target_link_libraries(sub_operator_test ${Boost_LIBRARIES})
 add_test(NAME sub_operator_test COMMAND sub_operator_test)
+
+add_executable(mul_operator_test test/mul_operator.cpp)
+target_link_libraries(mul_operator_test ${Boost_LIBRARIES})
+add_test(NAME mul_operator_test COMMAND mul_operator_test)
+
+add_executable(div_operator_test test/div_operator.cpp)
+target_link_libraries(div_operator_test ${Boost_LIBRARIES})
+add_test(NAME div_operator_test COMMAND div_operator_test)
 
 add_executable(make_box_test test/make_box.cpp)
 target_link_libraries(make_box_test ${Boost_LIBRARIES})
