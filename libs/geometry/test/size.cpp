@@ -3,25 +3,21 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#include <particle/geometry/adapted/std_array.hpp>
 #include <particle/geometry/box.hpp>
 #include <particle/geometry/size.hpp>
-
-// Boost headers
-#include <boost/array.hpp>
-#include <boost/fusion/adapted/boost_array.hpp>
-#include <boost/fusion/sequence/intrinsic/at_c.hpp>
 
 BOOST_AUTO_TEST_CASE(size_test)
 {
   using particle::geometry::box;
+  using particle::geometry::elem;
   using particle::geometry::size;
-  using boost::array;
-  using boost::fusion::at_c;
-  
-  box<array<double, 3>> b = {{-2.0, 3.0, -5.0}, {1.0, 5.0, 1.0}};
+
+  box<std::array<int, 3>, std::array<int, 3>> b = {{-2, 3, -5}, {1, 5, 1}};
+
   auto s = size(b);
-  const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(s), 3.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(s), 2.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(s), 6.0, tol);
+
+  BOOST_CHECK_EQUAL(elem<0>(s), 3);
+  BOOST_CHECK_EQUAL(elem<1>(s), 2);
+  BOOST_CHECK_EQUAL(elem<2>(s), 6);
 }

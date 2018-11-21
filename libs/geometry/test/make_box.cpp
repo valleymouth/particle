@@ -3,23 +3,29 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#include <particle/geometry/adapted/std_array.hpp>
 #include <particle/geometry/make_box.hpp>
-
-// Boost headers
-#include <boost/array.hpp>
-#include <boost/fusion/adapted/boost_array.hpp>
-#include <boost/fusion/sequence/intrinsic/at_c.hpp>
-#include <boost/fusion/sequence/comparison/equal_to.hpp>
 
 BOOST_AUTO_TEST_CASE(make_box_test)
 {
   using particle::geometry::make_box;
-  using boost::array;
-  using boost::fusion::at_c;
 
   auto b = make_box(
-    array<double, 3>({1.0, 2.0, 3.0})
-    , array<double, 3>({4.0, 5.0, 6.0}));
-  BOOST_CHECK_EQUAL(b.min == (array<double, 3>({1.0, 2.0, 3.0})), true);
-  BOOST_CHECK_EQUAL(b.min == (array<double, 3>({4.0, 5.0, 6.0})), false);
+    std::array<int, 3>({1, 2, 3})
+    , std::array<int, 3>({4, 5, 6}));
+  BOOST_CHECK_EQUAL(b.min == (std::array<int, 3>({1, 2, 3})), true);
+  BOOST_CHECK_EQUAL(b.max == (std::array<int, 3>({4, 5, 6})), true);
+}
+
+BOOST_AUTO_TEST_CASE(make_box_ref_test)
+{
+  using particle::geometry::make_box;
+
+  std::array<int, 3> min = {1, 2, 3};
+  std::array<int, 3> max = {4, 5, 6};
+  auto b = make_box(min, max);
+  min[1] = 7;
+  max[1] = 8;
+  BOOST_CHECK_EQUAL(b.min == (std::array<int, 3>({1, 7, 3})), true);
+  BOOST_CHECK_EQUAL(b.max == (std::array<int, 3>({4, 8, 6})), true);
 }

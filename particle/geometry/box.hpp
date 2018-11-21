@@ -1,95 +1,98 @@
 #pragma once
 
-// Local headers
+// Particle headers
 #include "../config.hpp"
-
-// Boost headers
-#include <boost/fusion/sequence/comparison/equal_to.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_const.hpp>
+#include "dim.hpp"
+#include "tag_of.hpp"
 
 // Std headers
 #include <type_traits>
 
 namespace particle
 {
-  namespace geometry
+namespace geometry
+{
+  template <typename Min, typename Max>
+  struct box
   {
-    template <
-      class Min
-      , class Max = Min
-      , typename std::enable_if<
-          boost::fusion::traits::is_sequence<Min>::value &&
-          boost::fusion::traits::is_sequence<Max>::value &&
-          (boost::fusion::result_of::size<Min>::value
-           == boost::fusion::result_of::size<Max>::value)
-          , int
-          >::type = 0
-      >
-    struct box
+    using min_type = Min;
+    using max_type = Max;
+  
+    Min min;
+    Max max;
+
+    PARTICLE_INLINE_FUNCTION
+    box(Min const& min, Max const& max)
+      : min(min), max(max)
+    {}
+  };
+
+  namespace traits
+  {
+    struct box_tag;
+    
+    template <typename Min, typename Max>
+    struct tag_of<box<Min, Max>>
     {
-      typedef Min min_type;
-      typedef Max max_type;
-      
-      Min min;
-      Max max;
+      using type = box_tag;
+    };
 
-      box(Min min, Max max): min(min), max(max)
-      {}
-      
-      bool operator==(box<Min, Max> const& box) const
-      {
-	if (min = box.min && max == box.max)
-	  return true;
-	return false;
-      }
+    template <typename Min, typename Max>
+    struct dim<box<Min, Max>>
+    {
+      static constexpr int value = dim<Min>::value;
+    };
+  } // namespace traits
 
-      bool operator!=(box<Min, Max> const& box) const
+  namespace detail
+  {
+    template <typename>
+    struct max_impl;
+
+    template <>
+    struct max_impl<traits::box_tag>
+    {
+      // template <typename T>
+      // PARTICLE_STATIC_FUNCTION
+      // typename std::conditional<
+      //   std::is_const<T>::value
+      //   , typename T::max_type const&
+      //   , typename T::max_type&
+      //   >::type apply(T& b)
+      // {
+      //   return b.max;
+      // }
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      auto& apply(T& b)
       {
-	return !((*this) == box);
+        return b.max;
       }
     };
 
-    namespace traits
+    template <typename>
+    struct min_impl;
+
+    template <>
+    struct min_impl<traits::box_tag>
     {
-      template <class>
-      struct min;
-    
-      template <class Box>
-      struct min
+      // template <typename T>
+      // PARTICLE_STATIC_FUNCTION
+      // typename std::conditional<
+      //   std::is_const<T>::value
+      //   , typename T::min_type const&
+      //   , typename T::min_type&
+      //   >::type apply(T& b)
+      // {
+      //   return b.min;
+      // }
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      auto& apply(T& b)
       {
-	typedef typename boost::mpl::if_<
-	  boost::is_const<Box>
-	  , typename Box::min_type const&
-	  , typename Box::min_type &
-	  >::type type;
-      
-	PARTICLE_INLINE_FUNCTION
-	static type call(Box& box)
-	{
-	  return box.min;
-	}
-      };
-
-      template <class>
-      struct max;
-
-      template <class Box>
-      struct max
-      {
-	typedef typename boost::mpl::if_<
-	  boost::is_const<Box>
-	  , typename Box::max_type const&
-	  , typename Box::max_type &
-	  >::type type;
-      
-	PARTICLE_INLINE_FUNCTION
-	static type call(Box& box)
-	{
-	  return box.max;
-	}
-      };
-    } // namespace traits
-  } // namespace geometry
+        return b.min;
+      }
+    };
+  } // namespace detail
+} // namespace geometry
 } // namespace particle

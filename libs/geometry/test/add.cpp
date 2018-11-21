@@ -3,37 +3,62 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#include <particle/geometry/adapted/std_array.hpp>
 #include <particle/geometry/add.hpp>
-
-// Boost headers
-#include <boost/fusion/adapted/array.hpp>
-#include <boost/fusion/sequence/intrinsic/at_c.hpp>
 
 BOOST_AUTO_TEST_CASE(add_test)
 {
   using particle::geometry::add;
-  using boost::fusion::at_c;
+  using particle::geometry::elem;
 
-  double array0[] = {1.0, 2.0, 3.0};
-  double array1[] = {4.0, 5.0, 6.0};
-  auto array2 = add(array0, array1);
-  const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array2), 5.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array2), 7.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array2), 9.0, tol);
+  std::array<int, 3> array0 = {1, 2, 3};
+  std::array<int, 3> array1 = {4, 5, 6};
+  std::array<int, 3> array2 = {7, 8, 9};
+
+  {
+    auto array3 = add(array0, array1);
+    BOOST_CHECK_EQUAL(elem<0>(array3), 5);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 7);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 9);
+  }
+  {
+    auto array3 = add(array0, add(array1, array2));
+    BOOST_CHECK_EQUAL(elem<0>(array3), 12);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 15);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 18);
+  }
+  {
+    auto array3 = add(add(array0, array1), array2);
+    BOOST_CHECK_EQUAL(elem<0>(array3), 12);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 15);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 18);
+  }
+  {
+    auto array3 = add(add(array0, array2), add(array1, array2));
+    BOOST_CHECK_EQUAL(elem<0>(array3), 19);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 23);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 27);
+  }
 }
 
-BOOST_AUTO_TEST_CASE(add_add_test)
+BOOST_AUTO_TEST_CASE(add_scalar_test)
 {
   using particle::geometry::add;
-  using boost::fusion::at_c;
+  using particle::geometry::elem;
 
-  double array0[] = {1.0, 2.0, 3.0};
-  double array1[] = {4.0, 5.0, 6.0};
-  double array2[] = {7.0, 8.0, 9.0};
-  auto array3 = add(array0, add(array1, array2));
-  const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array3), 12.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array3), 15.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array3), 18.0, tol);
+  std::array<int, 3> array0 = {1, 2, 3};
+  std::array<int, 3> array1 = {4, 5, 6};
+
+  {
+    auto array3 = add(array0, 10);
+    BOOST_CHECK_EQUAL(elem<0>(array3), 11);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 12);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 13);
+  }
+  {
+    auto array3 = add(array0, add(array1, 10));
+    BOOST_CHECK_EQUAL(elem<0>(array3), 15);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 17);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 19);
+  }
 }

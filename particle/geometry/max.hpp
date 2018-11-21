@@ -5,26 +5,19 @@
 
 namespace particle
 {
-  namespace geometry
+namespace geometry
+{
+  namespace detail
   {
-    namespace traits
-    {
-      template <class>
-      struct max;
-    } // namespace traits
+    template <typename>
+    struct max_impl;
+  } // namespace detail
 
-    template <class T>
-    PARTICLE_INLINE_FUNCTION
-    typename traits::max<T>::type max(T& p)
-    {
-      return traits::max<T>::call(p);
-    }
-
-    template <class T>
-    PARTICLE_INLINE_FUNCTION
-    typename traits::max<T const>::type max(T const& p)
-    {
-      return traits::max<T const>::call(p);
-    }
-  } // namespace geometry
+  template <typename Box>
+  PARTICLE_INLINE_FUNCTION
+  decltype(auto) max(Box& b)
+  {
+    return detail::max_impl<typename traits::tag_of<Box>::type>::apply(b);
+  }
+} // namespace geometry
 } // namespace particle

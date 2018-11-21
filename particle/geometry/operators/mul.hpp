@@ -1,7 +1,7 @@
 #pragma once
 
 // Particle headers
-#include "../add.hpp"
+#include "../mul.hpp"
 
 // Std headers
 #include <type_traits>
@@ -19,10 +19,9 @@ namespace geometry
         , int
         >::type = 0
     >
-  PARTICLE_INLINE_FUNCTION
-  decltype(auto) operator+(L&& lhs, R&& rhs)
+  auto operator*(L&& lhs, R&& rhs)
   {
-    return add(std::forward<L>(lhs), std::forward<R>(rhs));
+    return mul(std::forward<L>(lhs), std::forward<R>(rhs));
   }
 } // namespace geometry
 } // namespace particle

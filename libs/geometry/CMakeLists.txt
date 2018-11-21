@@ -4,12 +4,17 @@ cmake_minimum_required(VERSION 2.6)
 include_directories(../../)
 
 find_package(Boost REQUIRED system)
-include_directories(${BOOST_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
-find_package(CUDA)
-if(CUDA_FOUND)
-  set_source_files_properties(src/verlet_list.cpp PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
-endif()
+#find_package(CUDA)
+#if(CUDA_FOUND)
+  # GCC 6.0 is the latest version supported by NVCC
+#  set(CUDA_HOST_COMPILER gcc-6)
+#endif()
+
+add_executable(elem_test test/elem.cpp)
+target_link_libraries(elem_test ${Boost_LIBRARIES})
+add_test(NAME elem_test COMMAND elem_test)
 
 add_executable(add_test test/add.cpp)
 target_link_libraries(add_test ${Boost_LIBRARIES})
@@ -50,19 +55,3 @@ add_test(NAME sub_operator_test COMMAND sub_operator_test)
 add_executable(make_box_test test/make_box.cpp)
 target_link_libraries(make_box_test ${Boost_LIBRARIES})
 add_test(NAME make_box_test COMMAND make_box_test)
-
-add_executable(smul_test test/smul.cpp)
-target_link_libraries(smul_test ${Boost_LIBRARIES})
-add_test(NAME smul_test COMMAND smul_test)
-
-add_executable(sdiv_test test/sdiv.cpp)
-target_link_libraries(sdiv_test ${Boost_LIBRARIES})
-add_test(NAME sdiv_test COMMAND sdiv_test)
-
-add_executable(convert_test test/convert.cpp)
-target_link_libraries(convert_test ${Boost_LIBRARIES})
-add_test(NAME convert_test COMMAND convert_test)
-
-add_executable(grid_test test/grid.cpp)
-target_link_libraries(grid_test ${Boost_LIBRARIES})
-add_test(NAME grid_test COMMAND grid_test)

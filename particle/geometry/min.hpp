@@ -5,26 +5,19 @@
 
 namespace particle
 {
-  namespace geometry
+namespace geometry
+{
+  namespace detail
   {
-    namespace traits
-    {
-      template <class>
-      struct min;
-    } // namespace traits
+    template <typename>
+    struct min_impl;
+  } // namespace detail
 
-    template <class T>
-    PARTICLE_INLINE_FUNCTION
-    typename traits::min<T>::type min(T& p)
-    {
-      return traits::min<T>::call(p);
-    }
-
-    template <class T>
-    PARTICLE_INLINE_FUNCTION
-    typename traits::min<T const>::type min(T const& p)
-    {
-      return traits::min<T const>::call(p);
-    }
-  } // namespace geometry
+  template <typename Box>
+  PARTICLE_INLINE_FUNCTION
+  decltype(auto) min(Box& b)
+  {
+    return detail::min_impl<typename traits::tag_of<Box>::type>::apply(b);
+  }
+} // namespace geometry
 } // namespace particle

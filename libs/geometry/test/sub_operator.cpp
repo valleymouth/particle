@@ -3,40 +3,62 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#include <particle/geometry/adapted/std_array.hpp>
 #include <particle/geometry/operators/sub.hpp>
-
-// Boost headers
-#include <boost/array.hpp>
-#include <boost/fusion/adapted/boost_array.hpp>
-#include <boost/fusion/sequence/intrinsic/at_c.hpp>
-
-using particle::geometry::operator-;
 
 BOOST_AUTO_TEST_CASE(sub_test)
 {
-  using boost::array;
-  using boost::fusion::at_c;
+  using particle::geometry::elem;
+  using particle::geometry::operator-;
+  
+  std::array<int, 3> array0 = {1, 2, 3};
+  std::array<int, 3> array1 = {4, 5, 6};
+  std::array<int, 3> array2 = {7, 8, 9};
 
-  array<double, 3> array0 = {1.0, 2.0, 3.0};
-  array<double, 3> array1 = {4.0, 5.0, 6.0};
-  auto array2 = array0 - array1;
-  const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array2), -3.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array2), -3.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array2), -3.0, tol);
+  {
+    auto array3 = array0 - array1;
+    BOOST_CHECK_EQUAL(elem<0>(array3), -3);
+    BOOST_CHECK_EQUAL(elem<1>(array3), -3);
+    BOOST_CHECK_EQUAL(elem<2>(array3), -3);
+  }
+  {
+    auto array3 = array0 - (array1 - array2);
+    BOOST_CHECK_EQUAL(elem<0>(array3), 4);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 5);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 6);
+  }
+  {
+    auto array3 = (array0 - array1) - array2;
+    BOOST_CHECK_EQUAL(elem<0>(array3), -10);
+    BOOST_CHECK_EQUAL(elem<1>(array3), -11);
+    BOOST_CHECK_EQUAL(elem<2>(array3), -12);
+  }
+  {
+    auto array3 = (array0 - array2) - (array1 - array2);
+    BOOST_CHECK_EQUAL(elem<0>(array3), -3);
+    BOOST_CHECK_EQUAL(elem<1>(array3), -3);
+    BOOST_CHECK_EQUAL(elem<2>(array3), -3);
+  }
 }
 
-BOOST_AUTO_TEST_CASE(sub_sub_test)
+BOOST_AUTO_TEST_CASE(sub_scalar_test)
 {
-  using boost::array;
-  using boost::fusion::at_c;
+  using particle::geometry::elem;
+  using particle::geometry::operator-;
 
-  array<double, 3> array0 = {1.0, 2.0, 3.0};
-  array<double, 3> array1 = {4.0, 5.0, 6.0};
-  array<double, 3> array2 = {7.0, 8.0, 9.0};
-  auto array3 = array0 - (array1 - array2);
-  const double tol = 1e-20;
-  BOOST_CHECK_CLOSE(at_c<0>(array3), 4.0, tol);
-  BOOST_CHECK_CLOSE(at_c<1>(array3), 5.0, tol);
-  BOOST_CHECK_CLOSE(at_c<2>(array3), 6.0, tol);
+  std::array<int, 3> array0 = {1, 2, 3};
+  std::array<int, 3> array1 = {4, 5, 6};
+
+  {
+    auto array3 = array0 - 10;
+    BOOST_CHECK_EQUAL(elem<0>(array3), -9);
+    BOOST_CHECK_EQUAL(elem<1>(array3), -8);
+    BOOST_CHECK_EQUAL(elem<2>(array3), -7);
+  }
+  {
+    auto array3 = array0 - (array1 - 10);
+    BOOST_CHECK_EQUAL(elem<0>(array3), 7);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 7);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 7);
+  }
 }
