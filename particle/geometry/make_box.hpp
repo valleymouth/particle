@@ -11,22 +11,16 @@ namespace geometry
   PARTICLE_INLINE_FUNCTION
   auto make_box(Min&& min, Max&& max)
   {
-    // using min_type = decltype(std::forward<Min>(min));
-    // using max_type = decltype(std::forward<Max>(max));
-    //BOOST_MPL_ASSERT((std::is_same<int, Min>));
     return box<
       typename std::conditional<
-        std::is_lvalue_reference<Min>::value
-        , Min&
+        std::is_rvalue_reference<Min>::value
+        , typename std::remove_reference<Min>::type
         , Min>::type
       , typename std::conditional<
-        std::is_lvalue_reference<Max>::value
-          , Max&
+        std::is_rvalue_reference<Max>::value
+          , typename std::remove_reference<Max>::type
           , Max>::type
-      >(std::forward<Min>(min), std::forward<Max>(max));
-    using min_type = decltype(std::forward<Min>(min));
-    using max_type = decltype(std::forward<Max>(max));
-    // return box<min_type, max_type>(std::forward<Min>(min), std::forward<Max>(max));
+      >(min, max);
   }
 } // namespace geometry
 } // namespace particle

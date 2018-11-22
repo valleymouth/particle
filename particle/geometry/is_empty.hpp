@@ -12,7 +12,7 @@ namespace geometry
 {
   template <typename Box>
   PARTICLE_INLINE_FUNCTION
-  bool is_empty(Box&& b)
+  bool is_empty(Box const& b)
   {
     return fold(
       transform(

@@ -21,7 +21,11 @@ namespace geometry
         , typename std::remove_reference<T>::type
         , T&
         >::type vec;
-      F f;
+      typename std::conditional<
+        std::is_rvalue_reference<F>::value
+        , typename std::remove_reference<F>::type
+        , F&
+        >::type f;
 
       PARTICLE_INLINE_FUNCTION
       unary_transform_t(T&& x, F&& f)
@@ -43,7 +47,11 @@ namespace geometry
         , typename std::remove_reference<T1>::type
         , T1&
         >::type vec1;
-      F f;
+      typename std::conditional<
+        std::is_rvalue_reference<F>::value
+        , typename std::remove_reference<F>::type
+        , F&
+        >::type f;
 
       PARTICLE_INLINE_FUNCTION
       binary_transform_t(T0&& x0, T1&& x1, F&& f)

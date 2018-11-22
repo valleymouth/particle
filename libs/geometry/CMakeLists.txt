@@ -71,3 +71,7 @@ add_test(NAME div_operator_test COMMAND div_operator_test)
 add_executable(make_box_test test/make_box.cpp)
 target_link_libraries(make_box_test ${Boost_LIBRARIES})
 add_test(NAME make_box_test COMMAND make_box_test)
+
+add_executable(intersect_test test/intersect.cpp)
+target_link_libraries(intersect_test ${Boost_LIBRARIES})
+add_test(NAME intersect_test COMMAND intersect_test)

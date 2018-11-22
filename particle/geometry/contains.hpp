@@ -12,7 +12,7 @@ namespace geometry
 {
   template <typename Box, typename T>
   PARTICLE_INLINE_FUNCTION
-  bool contains(Box&& b, T&& x)
+  bool contains(Box const& b, T const& x)
   {
     return fold(
       transform(

@@ -52,16 +52,6 @@ namespace geometry
     template <>
     struct max_impl<traits::box_tag>
     {
-      // template <typename T>
-      // PARTICLE_STATIC_FUNCTION
-      // typename std::conditional<
-      //   std::is_const<T>::value
-      //   , typename T::max_type const&
-      //   , typename T::max_type&
-      //   >::type apply(T& b)
-      // {
-      //   return b.max;
-      // }
       template <typename T>
       PARTICLE_STATIC_FUNCTION
       auto& apply(T& b)
@@ -76,16 +66,6 @@ namespace geometry
     template <>
     struct min_impl<traits::box_tag>
     {
-      // template <typename T>
-      // PARTICLE_STATIC_FUNCTION
-      // typename std::conditional<
-      //   std::is_const<T>::value
-      //   , typename T::min_type const&
-      //   , typename T::min_type&
-      //   >::type apply(T& b)
-      // {
-      //   return b.min;
-      // }
       template <typename T>
       PARTICLE_STATIC_FUNCTION
       auto& apply(T& b)
