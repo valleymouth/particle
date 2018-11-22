@@ -44,16 +44,6 @@ namespace geometry
       template <std::size_t I>
       struct apply
       {
-        // template <typename T>
-        // PARTICLE_STATIC_FUNCTION
-        // typename std::conditional<
-        //   std::is_const<T>::value
-        //   , typename T::value_type const&
-        //   , typename T::value_type&
-        //   >::type call(T& x)
-        // {
-        //   return x[I];
-        // }
         template <typename T>
         PARTICLE_STATIC_FUNCTION
         auto& call(T& x)

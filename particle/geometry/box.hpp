@@ -3,6 +3,7 @@
 // Particle headers
 #include "../config.hpp"
 #include "dim.hpp"
+#include "is_box.hpp"
 #include "tag_of.hpp"
 
 // Std headers
@@ -25,6 +26,9 @@ namespace geometry
     box(Min const& min, Max const& max)
       : min(min), max(max)
     {}
+
+    PARTICLE_INLINE_FUNCTION
+    box() = default;
   };
 
   namespace traits
@@ -41,6 +45,12 @@ namespace geometry
     struct dim<box<Min, Max>>
     {
       static constexpr int value = dim<Min>::value;
+    };
+
+    template <typename Min, typename Max>
+    struct is_box<box<Min, Max>>
+    {
+      static constexpr int value = true;
     };
   } // namespace traits
 

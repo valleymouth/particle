@@ -75,3 +75,7 @@ add_test(NAME make_box_test COMMAND make_box_test)
 add_executable(intersect_test test/intersect.cpp)
 target_link_libraries(intersect_test ${Boost_LIBRARIES})
 add_test(NAME intersect_test COMMAND intersect_test)
+
+add_executable(as_test test/as.cpp)
+target_link_libraries(as_test ${Boost_LIBRARIES})
+add_test(NAME as_test COMMAND as_test)
