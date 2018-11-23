@@ -113,7 +113,7 @@ namespace geometry
       struct apply
       {
         PARTICLE_STATIC_FUNCTION
-        auto call(T& x)
+        decltype(auto) call(T&& x)
         {
           return x.f(elem<I>(x.vec));
         }
@@ -127,7 +127,7 @@ namespace geometry
       struct apply
       {
         PARTICLE_STATIC_FUNCTION
-        auto call(T& x)
+        decltype(auto) call(T&& x)
         {
           return x.f(elem<I>(x.vec0), elem<I>(x.vec1));
         }

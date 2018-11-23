@@ -45,7 +45,7 @@ namespace geometry
       struct apply
       {
         PARTICLE_STATIC_FUNCTION
-        auto& call(T& x)
+        auto& call(T&& x)
         {
           return x[I];
         }

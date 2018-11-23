@@ -20,11 +20,7 @@ namespace geometry
       struct apply
       {
         PARTICLE_STATIC_FUNCTION
-        typename std::conditional<
-          std::is_const<T>::value
-          , T const&
-          , T&
-          >::type call(T& x)
+        auto& call(T&& x)
         {
           return x;
         }
@@ -34,11 +30,11 @@ namespace geometry
 
   template <std::size_t I, typename T>
   PARTICLE_INLINE_FUNCTION
-  decltype(auto) elem(T& vec)
+  decltype(auto) elem(T&& vec)
   {
     return detail::elem_impl<
       typename traits::tag_of<T>::type
-      >::template apply<T, I>::call(vec);
+      >::template apply<T, I>::call(std::forward<T>(vec));
   }
 } // namespace geometry
 } // namespace particle

@@ -45,11 +45,7 @@ namespace geometry
       struct apply<Float3, 0>
       {
         PARTICLE_STATIC_FUNCTION
-        typename std::conditional<
-          std::is_const<Float3>::value
-          , float const&
-          , float&>::type call(Float3& f)
-          float call(float3& f)
+        auto& call(Float3&& f)
         {
           return f.x;
         }
@@ -59,11 +55,7 @@ namespace geometry
       struct apply<Float3, 1>
       {
         PARTICLE_STATIC_FUNCTION
-        typename std::conditional<
-          std::is_const<Float3>::value
-          , float const&
-          , float&>::type call(Float3& f)
-          float call(float3& f)
+        auto& call(Float3&& f)
         {
           return f.y;
         }
@@ -73,11 +65,7 @@ namespace geometry
       struct apply<Float3, 2>
       {
         PARTICLE_STATIC_FUNCTION
-        typename std::conditional<
-          std::is_const<Float3>::value
-          , float const&
-          , float&>::type call(Float3& f)
-          float call(float3& f)
+        auto& call(Float3&& f)
         {
           return f.z;
         }
