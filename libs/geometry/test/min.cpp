@@ -3,9 +3,19 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/box.hpp>
 #include <particle/geometry/min.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(min_test)
 {
@@ -13,7 +23,7 @@ BOOST_AUTO_TEST_CASE(min_test)
   using particle::geometry::elem;
   using particle::geometry::min;
   {
-    box<std::array<int, 3>, std::array<int, 3>> b = {{1, 2, 3}, {4, 5, 6}};
+    box<vec_type, vec_type> b = {{1, 2, 3}, {4, 5, 6}};
     BOOST_CHECK_EQUAL(elem<0>(min(b)), 1);
     BOOST_CHECK_EQUAL(elem<1>(min(b)), 2);
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 3);
@@ -23,7 +33,7 @@ BOOST_AUTO_TEST_CASE(min_test)
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 9);
   }
   {
-    box<std::array<int, 3>, std::array<int, 3>> const b = {{1, 2, 3}, {4, 5, 6}};
+    box<vec_type, vec_type> const b = {{1, 2, 3}, {4, 5, 6}};
     BOOST_CHECK_EQUAL(elem<0>(min(b)), 1);
     BOOST_CHECK_EQUAL(elem<1>(min(b)), 2);
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 3);
@@ -36,8 +46,8 @@ BOOST_AUTO_TEST_CASE(min_ref_test)
   using particle::geometry::elem;
   using particle::geometry::min;
   {
-    std::array<int, 3> array = {1, 2, 3};
-    box<std::array<int, 3>&, std::array<int, 3>> b = {array, {4, 5, 6}};
+    vec_type array = {1, 2, 3};
+    box<vec_type&, vec_type> b = {array, {4, 5, 6}};
     BOOST_CHECK_EQUAL(elem<0>(min(b)), 1);
     BOOST_CHECK_EQUAL(elem<1>(min(b)), 2);
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 3);
@@ -47,8 +57,8 @@ BOOST_AUTO_TEST_CASE(min_ref_test)
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 9);
   }
   {
-    std::array<int, 3> const array = {1, 2, 3};
-    box<std::array<int, 3> const&, std::array<int, 3>> b = {array, {4, 5, 6}};
+    vec_type const array = {1, 2, 3};
+    box<vec_type const&, vec_type> b = {array, {4, 5, 6}};
     BOOST_CHECK_EQUAL(elem<0>(min(b)), 1);
     BOOST_CHECK_EQUAL(elem<1>(min(b)), 2);
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 3);

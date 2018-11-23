@@ -47,29 +47,35 @@ namespace geometry
     template <>
     struct elem_impl<traits::cuda_int2_tag>
     {
-      template <typename T, std::size_t I>
+      template <typename Int2, std::size_t I>
       struct apply;
 
-      template <>
-      struct apply<0>
+      template <typename Int2>
+      struct apply<Int2, 0>
       {
         PARTICLE_STATIC_FUNCTION
-        int call(int2& f)
+        typename std::conditional<
+          std::is_const<Int2>::value
+          , int const&
+          , int&>::type call(Int2& f)
         {
           return f.x;
         }
       };
     
-      template <>
-      struct apply<1>
+      template <typename Int2>
+      struct apply<Int2, 1>
       {
         PARTICLE_STATIC_FUNCTION
-        int call(int2& f)
+        typename std::conditional<
+          std::is_const<Int2>::value
+          , int const&
+          , int&>::type call(Int2& f)
         {
           return f.y;
         }
       };
     };
-  } // namspace detail
+  } // namespace detail
 } // namespace geometry
 } // namespace particle

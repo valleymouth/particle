@@ -3,19 +3,27 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/as.hpp>
 #include <particle/geometry/box.hpp>
 #include <particle/geometry/intersect.hpp>
 #include <particle/geometry/operators/add.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(as_vec_test)
 {
   using particle::geometry::as;
   using particle::geometry::elem;
   using particle::geometry::operator+;
-  
-  using vec_type = std::array<int, 3>;
  
   vec_type v0 = {1, 2, 3};
   vec_type v1 = {4, 5, 6};
@@ -37,12 +45,9 @@ BOOST_AUTO_TEST_CASE(as_box_test)
   using particle::geometry::elem;
   using particle::geometry::intersect;
 
-  using vec_type = std::array<int, 3>;
-  using box_type = box<vec_type, vec_type>;
-
-  box_type b0 = {{-2, -3, -4}, {2, 3, 4}};
-  box_type b1 = {{-1, 0, -5}, {3, 5, 5}};
-  box_type b2 = as<box_type>(intersect(b0, b1));
+  box<vec_type, vec_type> b0 = {{-2, -3, -4}, {2, 3, 4}};
+  box<vec_type, vec_type> b1 = {{-1, 0, -5}, {3, 5, 5}};
+  box<vec_type, vec_type> b2 = as<box<vec_type, vec_type>>(intersect(b0, b1));
   BOOST_CHECK_EQUAL(elem<0>(min(b2)), -1);
   BOOST_CHECK_EQUAL(elem<1>(min(b2)), 0);
   BOOST_CHECK_EQUAL(elem<2>(min(b2)), -4);

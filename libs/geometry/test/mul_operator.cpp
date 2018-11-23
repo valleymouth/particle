@@ -3,16 +3,26 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/operators/mul.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(mul_test)
 {
   using particle::geometry::elem;
   using particle::geometry::operator*;
   
-  std::array<int, 3> array0 = {1, 2, 3};
-  std::array<int, 3> array1 = {4, 5, 6};
+  vec_type array0 = {1, 2, 3};
+  vec_type array1 = {4, 5, 6};
 
   {
     auto array3 = array0 * array1;
@@ -27,7 +37,7 @@ BOOST_AUTO_TEST_CASE(mul_scalar_test)
   using particle::geometry::elem;
   using particle::geometry::operator*;
   
-  std::array<int, 3> array0 = {1, 2, 3};
+  vec_type array0 = {1, 2, 3};
 
   {
     auto array3 = array0 * 10;

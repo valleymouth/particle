@@ -16,10 +16,9 @@ namespace geometry
     template <>
     struct elem_impl<traits::scalar_tag>
     {
-      template <std::size_t>
+      template <typename T, std::size_t>
       struct apply
       {
-        template <typename T>
         PARTICLE_STATIC_FUNCTION
         typename std::conditional<
           std::is_const<T>::value
@@ -39,7 +38,7 @@ namespace geometry
   {
     return detail::elem_impl<
       typename traits::tag_of<T>::type
-      >::template apply<I>::call(vec);
+      >::template apply<T, I>::call(vec);
   }
 } // namespace geometry
 } // namespace particle

@@ -3,21 +3,31 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/elem.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(elem_test)
 {
   using particle::geometry::elem;
-  
-  std::array<int, 3> array = {1, 2, 3};
+
+  vec_type array = {1, 2, 3};
   BOOST_CHECK_EQUAL(elem<0>(array), 1);
   BOOST_CHECK_EQUAL(elem<1>(array), 2);
   BOOST_CHECK_EQUAL(elem<2>(array), 3);
   elem<0>(array) = 4;
   BOOST_CHECK_EQUAL(elem<0>(array), 4);
 
-  const std::array<int, 3> const_array = {1, 2, 3};
+  const vec_type const_array = {1, 2, 3};
   BOOST_CHECK_EQUAL(elem<0>(const_array), 1);
   BOOST_CHECK_EQUAL(elem<1>(const_array), 2);
   BOOST_CHECK_EQUAL(elem<2>(const_array), 3);

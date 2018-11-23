@@ -3,17 +3,27 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/sub.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(sub_test)
 {
   using particle::geometry::sub;
   using particle::geometry::elem;
   
-  std::array<int, 3> array0 = {1, 2, 3};
-  std::array<int, 3> array1 = {4, 5, 6};
-  std::array<int, 3> array2 = {7, 8, 9};
+  vec_type array0 = {1, 2, 3};
+  vec_type array1 = {4, 5, 6};
+  vec_type array2 = {7, 8, 9};
 
   {
     auto array3 = sub(array0, array1);
@@ -46,8 +56,8 @@ BOOST_AUTO_TEST_CASE(sub_scalar_test)
   using particle::geometry::sub;
   using particle::geometry::elem;
 
-  std::array<int, 3> array0 = {1, 2, 3};
-  std::array<int, 3> array1 = {4, 5, 6};
+  vec_type array0 = {1, 2, 3};
+  vec_type array1 = {4, 5, 6};
 
   {
     auto array3 = sub(array0, 10);

@@ -1,73 +1,85 @@
 #pragma once
 
 // Particle headers
-#include "../dim.hpp"
-#include "../elem.hpp"
-#include "../is_vector.hpp"
-#include "../tag_of.hpp"
+#include "../../dim.hpp"
+#include "../../elem.hpp"
+#include "../../is_vector.hpp"
+#include "../../tag_of.hpp"
 
 namespace particle
 {
-namespace traits
+namespace geometry
 {
-  struct cuda_int3_tag;
-
-  template <>
-  struct tag_of<int3>
+  namespace traits
   {
-    using type = cuda_int3_tag;
-  };
-
-  template <>
-  struct dim<int3>
-  {
-    static constexpr int value = 3;
-  };
-
-  template <>
-  struct is_vector<int3>
-  {
-    static constexpr bool value = true;
-  };
-} // namespace traits
-
-namespace detail
-{
-  template <>
-  struct elem_impl<traits::cuda_int3_tag>
-  {
-    template <typename T, std::size_t I>
-    struct apply;
+    struct cuda_int3_tag;
 
     template <>
-    struct apply<0>
+    struct tag_of<int3>
     {
-      PARTICLE_STATIC_FUNCTION
-      int call(int3& f)
-      {
-        return f.x;
-      }
+      using type = cuda_int3_tag;
     };
+
+    template <>
+    struct dim<int3>
+    {
+      static constexpr int value = 3;
+    };
+
+    template <>
+    struct is_vector<int3>
+    {
+      static constexpr bool value = true;
+    };
+  } // namespace traits
+
+  namespace detail
+  {
+    template <>
+    struct elem_impl<traits::cuda_int3_tag>
+    {
+      template <typename Int3, std::size_t I>
+      struct apply;
+
+      template <typename Int3>
+      struct apply<Int3, 0>
+      {
+        PARTICLE_STATIC_FUNCTION
+        typename std::conditional<
+          std::is_const<Int3>::value
+          , int const&
+          , int&>::type call(Int3& f)
+        {
+          return f.x;
+        }
+      };
     
-    template <>
-    struct apply<1>
-    {
-      PARTICLE_STATIC_FUNCTION
-      int call(int3& f)
+      template <typename Int3>
+      struct apply<Int3, 1>
       {
-        return f.y;
-      }
-    };
+        PARTICLE_STATIC_FUNCTION
+        typename std::conditional<
+          std::is_const<Int3>::value
+          , int const&
+          , int&>::type call(Int3& f)
+        {
+          return f.y;
+        }
+      };
 
-    template <>
-    struct apply<2>
-    {
-      PARTICLE_STATIC_FUNCTION
-      int call(int3& f)
+      template <typename Int3>
+      struct apply<Int3, 2>
       {
-        return f.z;
-      }
+        PARTICLE_STATIC_FUNCTION
+        typename std::conditional<
+          std::is_const<Int3>::value
+          , int const&
+          , int&>::type call(Int3& f)
+        {
+          return f.z;
+        }
+      };
     };
-  };
-} // namspace detail
+  } // namespace detail
+} // namespace geometry
 } // namespace particle

@@ -3,9 +3,19 @@
 #include <boost/test/included/unit_test.hpp>
 
 // Particle headers
+#ifdef __CUDACC__
+#include <particle/geometry/adapted/cuda/int3.hpp>
+#else
 #include <particle/geometry/adapted/std_array.hpp>
+#endif
 #include <particle/geometry/box.hpp>
 #include <particle/geometry/size.hpp>
+
+#ifdef __CUDACC__
+using vec_type = int3;
+#else
+using vec_type = std::array<int, 3>;
+#endif
 
 BOOST_AUTO_TEST_CASE(size_test)
 {
@@ -13,7 +23,7 @@ BOOST_AUTO_TEST_CASE(size_test)
   using particle::geometry::elem;
   using particle::geometry::size;
 
-  box<std::array<int, 3>, std::array<int, 3>> b = {{-2, 3, -5}, {1, 5, 1}};
+  box<vec_type, vec_type> b = {{-2, 3, -5}, {1, 5, 1}};
 
   auto s = size(b);
 

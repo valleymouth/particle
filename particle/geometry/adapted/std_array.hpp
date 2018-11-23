@@ -41,10 +41,9 @@ namespace geometry
     template <>
     struct elem_impl<traits::std_array_tag>
     {
-      template <std::size_t I>
+      template <typename T, std::size_t I>
       struct apply
       {
-        template <typename T>
         PARTICLE_STATIC_FUNCTION
         auto& call(T& x)
         {
