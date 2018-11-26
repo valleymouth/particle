@@ -45,7 +45,19 @@ namespace geometry
       struct apply<Float2, 0>
       {
         PARTICLE_STATIC_FUNCTION
-        auto& call(Float2&& f)
+        int& call(float2& f)
+        {
+          return f.x;
+        }
+
+        PARTICLE_STATIC_FUNCTION
+        const int& call(const float2& f)
+        {
+          return f.x;
+        }
+
+        PARTICLE_STATIC_FUNCTION
+        int call(float2&& f)
         {
           return f.x;
         }
@@ -55,7 +67,19 @@ namespace geometry
       struct apply<Float2, 1>
       {
         PARTICLE_STATIC_FUNCTION
-        auto& call(Float2&& f)
+        int& call(float2& f)
+        {
+          return f.y;
+        }
+
+        PARTICLE_STATIC_FUNCTION
+        const int& call(const float2& f)
+        {
+          return f.y;
+        }
+
+        PARTICLE_STATIC_FUNCTION
+        int call(float2&& f)
         {
           return f.y;
         }

@@ -20,9 +20,9 @@ namespace geometry
       struct apply
       {
         PARTICLE_STATIC_FUNCTION
-        auto& call(T&& x)
+        decltype(auto) call(T&& x)
         {
-          return x;
+          return std::forward<T>(x);
         }
       };
     };
