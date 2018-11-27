@@ -16,48 +16,28 @@ namespace geometry
     template <typename T, typename F>
     struct unary_transform_t
     {
-      typename std::conditional<
-        std::is_rvalue_reference<T>::value
-        , typename std::remove_reference<T>::type
-        , T&
-        >::type vec;
-      typename std::conditional<
-        std::is_rvalue_reference<F>::value
-        , typename std::remove_reference<F>::type
-        , F&
-        >::type f;
+      T vec;
+      F f;
 
       PARTICLE_INLINE_FUNCTION
-      unary_transform_t(T&& x, F&& f)
-        : vec(std::forward<T>(x))
-        , f(std::forward<F>(f))
+      unary_transform_t(T x, F f)
+        : vec(x)
+        , f(f)
       {}
     };
 
     template <typename T0, typename T1, typename F>
     struct binary_transform_t
     {
-      typename std::conditional<
-        std::is_rvalue_reference<T0>::value
-        , typename std::remove_reference<T0>::type
-        , T0&
-        >::type vec0;
-      typename std::conditional<
-        std::is_rvalue_reference<T1>::value
-        , typename std::remove_reference<T1>::type
-        , T1&
-        >::type vec1;
-      typename std::conditional<
-        std::is_rvalue_reference<F>::value
-        , typename std::remove_reference<F>::type
-        , F&
-        >::type f;
+      T0 vec0;
+      T1 vec1;
+      F f;
 
       PARTICLE_INLINE_FUNCTION
-      binary_transform_t(T0&& x0, T1&& x1, F&& f)
-        : vec0(std::forward<T0>(x0))
-        , vec1(std::forward<T1>(x1))
-        , f(std::forward<F>(f))
+      binary_transform_t(T0 x0, T1 x1, F f)
+        : vec0(x0)
+        , vec1(x1)
+        , f(f)
       {}
     };
   } // namespace detail
@@ -137,26 +117,16 @@ namespace geometry
   
   template <typename T, typename F>
   PARTICLE_INLINE_FUNCTION
-  auto transform(T&& x, F&& f)
+  auto transform(T&& x, F f)
   {
-    return detail::unary_transform_t<
-      decltype(std::forward<T>(x))
-      , decltype(std::forward<F>(f))>(
-        std::forward<T>(x)
-        , std::forward<F>(f));
+    return detail::unary_transform_t<T, F>(x, f);
   }
 
   template <typename T0, typename T1, typename F>
   PARTICLE_INLINE_FUNCTION
-  auto transform(T0&& x0, T1&& x1, F&& f)
+  auto transform(T0&& x0, T1&& x1, F f)
   {
-    return detail::binary_transform_t<
-      decltype(std::forward<T0>(x0))
-      , decltype(std::forward<T1>(x1))
-      , decltype(std::forward<F>(f))>(
-        std::forward<T0>(x0)
-        , std::forward<T1>(x1)
-        , std::forward<F>(f));
+    return detail::binary_transform_t<T0, T1, F>(x0, x1, f);
   }
 } // namespace geometry
 } // namespace particle

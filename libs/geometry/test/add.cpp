@@ -49,6 +49,12 @@ BOOST_AUTO_TEST_CASE(add_test)
     BOOST_CHECK_EQUAL(elem<1>(array3), 23);
     BOOST_CHECK_EQUAL(elem<2>(array3), 27);
   }
+  {
+    auto array3 = add(array0, add(array1, vec_type({7, 8, 9})));
+    BOOST_CHECK_EQUAL(elem<0>(array3), 12);
+    BOOST_CHECK_EQUAL(elem<1>(array3), 15);
+    BOOST_CHECK_EQUAL(elem<2>(array3), 18);
+  }
 }
 
 BOOST_AUTO_TEST_CASE(add_scalar_test)

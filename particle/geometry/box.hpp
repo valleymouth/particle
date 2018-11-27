@@ -23,7 +23,7 @@ namespace geometry
     Max max;
 
     PARTICLE_INLINE_FUNCTION
-    box(Min const& min, Max const& max)
+    box(Min min, Max max)
       : min(min), max(max)
     {}
 
@@ -64,7 +64,21 @@ namespace geometry
     {
       template <typename T>
       PARTICLE_STATIC_FUNCTION
-      auto& apply(T& b)
+      typename T::max_type& apply(T& b)
+      {
+        return b.max;
+      }
+
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      const typename T::max_type& apply(const T& b)
+      {
+        return b.max;
+      }
+
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      typename T::max_type apply(T&& b)
       {
         return b.max;
       }
@@ -78,7 +92,21 @@ namespace geometry
     {
       template <typename T>
       PARTICLE_STATIC_FUNCTION
-      auto& apply(T& b)
+      typename T::min_type& apply(T& b)
+      {
+        return b.min;
+      }
+
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      const typename T::min_type& apply(const T& b)
+      {
+        return b.min;
+      }
+
+      template <typename T>
+      PARTICLE_STATIC_FUNCTION
+      typename T::min_type apply(T&& b)
       {
         return b.min;
       }

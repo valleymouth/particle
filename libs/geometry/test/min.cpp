@@ -37,6 +37,14 @@ BOOST_AUTO_TEST_CASE(min_test)
     BOOST_CHECK_EQUAL(elem<0>(min(b)), 1);
     BOOST_CHECK_EQUAL(elem<1>(min(b)), 2);
     BOOST_CHECK_EQUAL(elem<2>(min(b)), 3);
+    // Must give a compilation error
+    // min(b) = {1, 2, 3};
+  }
+  {
+    using box_type = box<vec_type, vec_type>;
+    BOOST_CHECK_EQUAL(elem<0>(min(box_type(vec_type({1, 2, 3}), vec_type({4, 5, 6})))), 1);
+    BOOST_CHECK_EQUAL(elem<1>(min(box_type(vec_type({1, 2, 3}), vec_type({4, 5, 6})))), 2);
+    BOOST_CHECK_EQUAL(elem<2>(min(box_type(vec_type({1, 2, 3}), vec_type({4, 5, 6})))), 3);
   }
 }
 

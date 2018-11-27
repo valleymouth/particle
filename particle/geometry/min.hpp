@@ -15,9 +15,11 @@ namespace geometry
 
   template <typename Box>
   PARTICLE_INLINE_FUNCTION
-  decltype(auto) min(Box& b)
+  decltype(auto) min(Box&& b)
   {
-    return detail::min_impl<typename traits::tag_of<Box>::type>::apply(b);
+    return detail::min_impl<
+      typename traits::tag_of<Box>::type
+      >::apply(std::forward<Box>(b));
   }
 } // namespace geometry
 } // namespace particle
