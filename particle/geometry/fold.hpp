@@ -15,9 +15,11 @@ namespace geometry
     {
       template <typename T, typename F>
       PARTICLE_STATIC_FUNCTION
-      auto apply(T&& x, F&& f)
+      auto apply(const T& x, F f)
       {
-        return f(elem<I>(x), fold_impl_<I + 1, N>::apply(x, f));
+        return f(
+          elem<I>(x)
+          , fold_impl_<I + 1, N>::apply(x, f));
       }
     };
 
@@ -26,7 +28,7 @@ namespace geometry
     {
       template <typename T, typename F>
       PARTICLE_STATIC_FUNCTION
-      auto apply(T&& x, F&&)
+      auto apply(const T& x, F)
       {
         return elem<N>(x);
       }
@@ -34,15 +36,20 @@ namespace geometry
 
     template <typename T, typename S, typename F>
     PARTICLE_INLINE_FUNCTION
-    auto fold_impl(T&& x, S&& s, F&& f)
+    auto fold_impl(const T& x, const S& s, F f)
     {
-      return f(s, detail::fold_impl_<0, traits::dim<T>::value - 1>::apply(x, f));
+      return f(
+        s
+        , detail::fold_impl_<
+        0
+        , traits::dim<T>::value - 1
+        >::apply(x, f));
     }
   }
 
   template <typename T, typename S, typename F>
   PARTICLE_INLINE_FUNCTION
-  auto fold(T &&x, S&& s, F&& f)
+  auto fold(const T& x, const S& s, F f)
   {
     return detail::fold_impl(x, s, f);
   }

@@ -4,6 +4,7 @@ project(particle)
 
 enable_testing()
 add_subdirectory(libs/geometry)
+add_subdirectory(libs/grid)
 
 # cuda_add_executable(verlet_list src/verlet_list.cpp)
 # target_link_libraries(verlet_list ${Kokkos_LIBRARIES} ${Boost_LIBRARIES})
