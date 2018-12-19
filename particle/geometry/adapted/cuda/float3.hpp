@@ -5,6 +5,7 @@
 #include "../../elem.hpp"
 #include "../../is_vector.hpp"
 #include "../../tag_of.hpp"
+#include "../../value_type.hpp"
 
 namespace particle
 {
@@ -30,6 +31,12 @@ namespace geometry
     struct is_vector<float3>
     {
       static constexpr bool value = true;
+    };
+
+    template <>
+    struct value_type<float3>
+    {
+      using type = float;
     };
   } // namespace traits
 

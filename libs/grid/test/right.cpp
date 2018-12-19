@@ -20,7 +20,7 @@ using cell_type = std::array<int, 3>;
 BOOST_AUTO_TEST_CASE(right_test)
 {
   using particle::geometry::box;
-  using particle::grid::right;
+  using particle::sfc::right;
 
   box<cell_type, cell_type> b = {{-2, 3, -5}, {1, 5, 1}};
   cell_type cell0 = {-1, 4, -2};

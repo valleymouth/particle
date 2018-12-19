@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input>
+  <count>10
+  </count>
+  <cutoff>1.8
+  </cutoff>
+  <lower>
+    <x>-2
+    </x>
+    <y>-2
+    </y>
+    <z>-2
+    </z>
+  </lower>
+  <upper>
+    <x>2
+    </x>
+    <y>2
+    </y>
+    <z>2
+    </z>
+  </upper>
+  <cell_size>0.5
+  </cell_size>
+  <step_count>0
+  </step_count>
+</input>

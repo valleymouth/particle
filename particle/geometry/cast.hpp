@@ -12,7 +12,7 @@ namespace geometry
   PARTICLE_INLINE_FUNCTION
   auto cast(U&& x)
   {
-    return transform(x, [](auto x) { return static_cast<T>(x); });
+    return transform(std::forward<U>(x), [](auto x) { return static_cast<T>(x); });
   }
 } // namespace geometry
 } // namespace particle

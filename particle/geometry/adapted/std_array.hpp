@@ -5,6 +5,7 @@
 #include "../elem.hpp"
 #include "../is_vector.hpp"
 #include "../tag_of.hpp"
+#include "../value_type.hpp"
 
 // Std headers
 #include <array>
@@ -33,6 +34,12 @@ namespace geometry
     struct is_vector<std::array<T, N>>
     {
       static constexpr bool value = true;
+    };
+
+    template <typename T, std::size_t N>
+    struct value_type<std::array<T, N>>
+    {
+      using type = T;
     };
   } // namespace traits
 

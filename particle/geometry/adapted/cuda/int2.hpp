@@ -1,7 +1,11 @@
 #pragma once
 
 // Particle headers
-#include "../../config.hpp"
+#include "../../dim.hpp"
+#include "../../elem.hpp"
+#include "../../is_vector.hpp"
+#include "../../tag_of.hpp"
+#include "../../value_type.hpp"
 
 namespace particle
 {
@@ -11,17 +15,11 @@ namespace geometry
   {
     struct cuda_int2_tag;
 
-    template <typename, typename Enable = void>
-    struct tag_of;
-
     template <>
     struct tag_of<int2>
     {
       using type = cuda_int2_tag;
     };
-
-    template <typename, typename Enable = void>
-    struct dim;
 
     template <>
     struct dim<int2>
@@ -29,13 +27,16 @@ namespace geometry
       static constexpr int value = 2;
     };
 
-    template <typename, typename Enable = void>
-    struct is_vector;
-
     template <>
     struct is_vector<int2>
     {
       static constexpr bool value = true;
+    };
+
+    template <>
+    struct value_type<int2>
+    {
+      using type = int;
     };
   } // namespace traits
 

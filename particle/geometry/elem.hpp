@@ -4,6 +4,9 @@
 #include "../config.hpp"
 #include "tag_of.hpp"
 
+// Std headers
+#include <utility> // for std::forward
+
 namespace particle
 {
 namespace geometry

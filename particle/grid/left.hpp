@@ -10,7 +10,7 @@
 
 namespace particle
 {
-namespace grid
+namespace sfc
 {
   namespace detail
   {
@@ -57,5 +57,5 @@ namespace grid
   {
     return detail::left_impl(box, cell);
   }
-} // namespace grid
+} // namespace sfc
 } // namespace particle
