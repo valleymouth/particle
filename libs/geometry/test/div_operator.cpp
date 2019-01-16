@@ -19,7 +19,7 @@ using vec_type = std::array<int, 3>;
 BOOST_AUTO_TEST_CASE(div_test)
 {
   using particle::geometry::elem;
-  using particle::geometry::operator/;
+  using particle::geometry::operators::operator/;
   
   vec_type array0 = {4, 9, 20};
   vec_type array1 = {2, 3, 5};
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(div_test)
 BOOST_AUTO_TEST_CASE(div_scalar_test)
 {
   using particle::geometry::elem;
-  using particle::geometry::operator/;
+  using particle::geometry::operators::operator/;
   
   vec_type array0 = {10, 100, 1000};
 

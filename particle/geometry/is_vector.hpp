@@ -9,11 +9,8 @@ namespace geometry
 {
   namespace traits
   {
-    template <typename, typename Enable = void>
-    struct is_vector;
-
-    template <typename T>
-    struct is_vector<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+    template <typename>
+    struct is_vector
     {
       static constexpr bool value = false;
     };

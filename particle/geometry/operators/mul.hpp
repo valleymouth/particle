@@ -10,6 +10,8 @@ namespace particle
 {
 namespace geometry
 {
+namespace operators
+{
   template <
     class L
     , class R
@@ -24,5 +26,6 @@ namespace geometry
   {
     return mul(std::forward<L>(lhs), std::forward<R>(rhs));
   }
+} // namespace operators
 } // namespace geometry
 } // namespace particle

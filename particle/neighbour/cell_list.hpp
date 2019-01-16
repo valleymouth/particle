@@ -60,11 +60,11 @@ namespace neighbour
         , m_indices.end()
         , thrust::counting_iterator<Index>(0)
         , thrust::counting_iterator<Index>(cell_count)
-        , m_cell_ranges.begin());
+        , m_cell_ranges.begin() + 1);
     }
 
-    template <typename Position, typename F>
-    void pair_interact(Position first, Position last, F f)
+    template <typename InputIterator, typename F>
+    void pair_interact(InputIterator position_first, InputIterator position_last, F f)
     {
       // local copy to be used inside lambda and prevent copy of *this
       auto ranges = m_cell_ranges.begin();
@@ -72,9 +72,9 @@ namespace neighbour
 
       thrust::for_each(
         thrust::counting_iterator<Index>(0)
-        , thrust::counting_iterator<Index>(last - first)
+        , thrust::counting_iterator<Index>(position_last - position_first)
         , PARTICLE_LAMBDA(Index i) {
-          auto position = first + i;
+          auto position = position_first + i;
           auto cell = grid.template get_cell_index<Index>(*position);
           for (Index yi = -1; yi <= 1; yi++)
           {
@@ -82,9 +82,9 @@ namespace neighbour
             {
               Index index = grid.get_index(
                 particle::geometry::add(cell, thrust::make_tuple(xi, yi)));
-              for (Index ni = *(ranges + index); ni < *(ranges + index + 1); ni++)
+              for (Index j = *(ranges + index); j < *(ranges + index + 1); j++)
               {
-                f(i, ni);
+                f(i, j);
               }
             }
           }

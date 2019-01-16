@@ -87,7 +87,13 @@ namespace vtk
       array->InsertNextPoint(elem<0>(t), elem<1>(t), elem<2>(t));
     }
 
-    template <class Array, class T>
+    // Need enable_if to prevent the compiler from choosing this function for
+    // tuples.
+    template <
+      class Array
+      , class T
+      , typename std::enable_if<
+          particle::geometry::traits::dim<T>::value == 1, int>::type = 0>
     inline void insert_next_value(Array array, T x)
     {
       array->InsertNextValue(x);
@@ -108,7 +114,6 @@ namespace vtk
 
       array->InsertNextTuple3(elem<0>(t), elem<1>(t), elem<2>(t));
     }
-
   } // namespace detail
   
   template <typename InputIterator, typename Names, typename Attrs>
@@ -147,7 +152,6 @@ namespace vtk
 
     for (InputIterator it = position_first; it != position_last; ++it)
     {
-
       detail::insert_next_point(points, *it);
       boost::fusion::for_each(
         zip

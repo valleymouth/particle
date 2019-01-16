@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(as_vec_test)
 {
   using particle::geometry::as;
   using particle::geometry::elem;
-  using particle::geometry::operator+;
+  using particle::geometry::operators::operator+;
  
   vec_type v0 = {1, 2, 3};
   vec_type v1 = {4, 5, 6};
