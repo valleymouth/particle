@@ -13,7 +13,12 @@ namespace geometry
     struct dim;
 
     template <typename T>
-    struct dim<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+    struct dim<
+      T
+      , typename std::enable_if<
+          std::is_arithmetic<T>::value
+          && !std::is_const<T>::value
+          && !std::is_reference<T>::value>::type>
     {
       static constexpr int value = 1;
     };
