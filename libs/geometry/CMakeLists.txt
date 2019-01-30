@@ -54,6 +54,10 @@ add_executable(is_empty_test test/is_empty.cpp)
 target_link_libraries(is_empty_test ${Boost_LIBRARIES})
 add_test(NAME is_empty_test COMMAND is_empty_test)
 
+add_executable(length_test test/length.cpp)
+target_link_libraries(length_test ${Boost_LIBRARIES})
+add_test(NAME length_test COMMAND length_test)
+
 add_executable(make_box_test test/make_box.cpp)
 target_link_libraries(make_box_test ${Boost_LIBRARIES})
 add_test(NAME make_box_test COMMAND make_box_test)
@@ -167,6 +171,12 @@ if(CUDA_FOUND)
   cuda_add_executable(is_empty_test_cuda ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/is_empty.cu)
   target_link_libraries(is_empty_test_cuda ${Boost_LIBRARIES})
   add_test(NAME is_empty_test_cuda COMMAND is_empty_test_cuda)
+
+  file(COPY test/length.cpp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/cuda)
+  file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/length.cpp ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/length.cu)
+  cuda_add_executable(length_test_cuda ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/length.cu)
+  target_link_libraries(length_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME length_test_cuda COMMAND length_test_cuda)
 
   file(COPY test/make_box.cpp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/cuda)
   file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/make_box.cpp ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/make_box.cu)
