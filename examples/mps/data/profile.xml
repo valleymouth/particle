@@ -32,7 +32,7 @@
   </upper>
   <cell_size>0.02
   </cell_size>
-  <step_count>8
+  <step_count>100
   </step_count>
   <steps_per_output>1000
   </steps_per_output>
@@ -184,6 +184,6 @@
     <size_z>0
     </size_z>
   </box>
-  <output_filename>dam_break_2d
+  <output_filename>profile
   </output_filename>
 </input>
