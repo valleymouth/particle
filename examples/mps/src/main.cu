@@ -94,7 +94,11 @@ struct input_params
     namespace pt = boost::property_tree;
 
     pt::ptree tree;
+#pragma push
+#pragma diag_suppress = code_is_unreachable
+#pragma diag_suppress = initialization_not_reachable
     pt::read_xml(filename, tree, pt::xml_parser::trim_whitespace);
+#pragma pop
     time_step = tree.get<float>("input.time_step");
     distance_between_particles = tree.get<float>("input.distance_between_particles");
     cutoff = tree.get<float>("input.cutoff");
@@ -247,7 +251,7 @@ int main(int argc, char** argv)
       }
     }
   }
-  
+
   using boost::fusion::pair;
   particle::collection<
     pair<tag::id, thrust::device_vector<int>>
@@ -306,8 +310,6 @@ int main(int argc, char** argv)
 
   const int dimensions = 2;
   const auto kernel = particle::mps::rational_kernel<double>(ip.cutoff);
-  // const auto kernel = particle::mps::yamada::kernel<double>(ip.cutoff);
-  // const auto grad_kernel = particle::mps::yamada::gradient_kernel<double>(ip.cutoff);
   const double dbp = ip.distance_between_particles;
   const double pnd0 = particle::mps::pnd0<2>(dbp, static_cast<double>(ip.cutoff), kernel);
   const double lambda = particle::mps::lambda<2>(dbp, static_cast<double>(ip.cutoff), pnd0, kernel);
@@ -316,19 +318,35 @@ int main(int argc, char** argv)
   const double gradient_constant = dimensions / pnd0;
 
   int h_categories[max_types];
-  std::transform(ip.types.begin(), ip.types.end(), h_categories, [](auto t) { return static_cast<int>(t.second.category); });
+  std::transform(
+    ip.types.begin()
+    , ip.types.end()
+    , h_categories
+    , [](auto t) { return static_cast<int>(t.second.category); });
   cudaMemcpyToSymbol(categories, h_categories, ip.types.size() * sizeof(int));
 
   int h_motions[max_types];
-  std::transform(ip.types.begin(), ip.types.end(), h_motions, [](auto t) { return static_cast<int>(t.second.motion); });
+  std::transform(
+    ip.types.begin()
+    , ip.types.end()
+    , h_motions
+    , [](auto t) { return static_cast<int>(t.second.motion); });
   cudaMemcpyToSymbol(motions, h_motions, ip.types.size() * sizeof(int));
 
   double h_densities[max_types];
-  std::transform(ip.types.begin(), ip.types.end(), h_densities, [](auto t) { return t.second.density; });
+  std::transform(
+    ip.types.begin()
+    , ip.types.end()
+    , h_densities
+    , [](auto t) { return t.second.density; });
   cudaMemcpyToSymbol(densities, h_densities, ip.types.size() * sizeof(double));
 
   double h_viscosities[max_types];
-  std::transform(ip.types.begin(), ip.types.end(), h_viscosities, [](auto t) { return t.second.viscosity; });
+  std::transform(
+    ip.types.begin()
+    , ip.types.end()
+    , h_viscosities
+    , [](auto t) { return t.second.viscosity; });
   cudaMemcpyToSymbol(viscosities, h_viscosities, ip.types.size() * sizeof(double));
 
   using output_tags = boost::mpl::vector<tag::id, tag::type, tag::x, tag::y, tag::vx, tag::vy, tag::pnd, tag::pressure>;
@@ -363,7 +381,7 @@ int main(int argc, char** argv)
       col.begin<tag::type>()
       , col.end<tag::type>()
       , col.begin<tag::acceleration>()
-      , PARTICLE_LAMBDA(int t)
+      , PARTICLE_LAMBDA_DEVICE(int t)
       {
         if (motions[t] == static_cast<int>(motion_t::free))
           return thrust::make_tuple(0.0, -gravity);
@@ -377,7 +395,7 @@ int main(int argc, char** argv)
     cl.pair_interact(
       col.begin<tag::position>()
       , col.end<tag::position>()
-      , [=] __device__ (int i, cell_list::neighbour_list nl)
+      , PARTICLE_LAMBDA_DEVICE(int i, cell_list::neighbour_list nl)
       {
         using particle::geometry::as;
         int type_i = *(type_first + i);
@@ -386,21 +404,23 @@ int main(int argc, char** argv)
         auto pos_i = *(position_first + i);
         auto vel_i = *(velocity_first + i);
         auto acc_i = *(acceleration_first + i);
-        *(acceleration_first + i) = as<thrust::tuple<double, double>>(laplacian_constant * viscosities[type_i] * nl.reduce(
-          i
-          , pos_i
-          , as<thrust::tuple<double, double>>(acc_i)
-          , [=] __device__ (int i, int j, thrust::tuple<double, double>& value)
-          {
-            int type_j = *(type_first + j);
-            if (categories[type_j] == static_cast<int>(category_t::ghost))
-              return;
-            auto pos_j = *(position_first + j);
-            auto vel_j = *(velocity_first + j);
-            double r = particle::geometry::distance(pos_i, pos_j);
-            value = as<thrust::tuple<double, double>>(
-              value + (vel_j - vel_i) * kernel(r));
-          }));
+        *(acceleration_first + i) =
+          as<thrust::tuple<double, double>>(
+            laplacian_constant * viscosities[type_i] * nl.reduce(
+              i
+              , pos_i
+              , as<thrust::tuple<double, double>>(acc_i)
+              , PARTICLE_LAMBDA_DEVICE(int i, int j, thrust::tuple<double, double>& value)
+              {
+                int type_j = *(type_first + j);
+                if (categories[type_j] == static_cast<int>(category_t::ghost))
+                  return;
+                auto pos_j = *(position_first + j);
+                auto vel_j = *(velocity_first + j);
+                double r = particle::geometry::distance(pos_i, pos_j);
+                value = as<thrust::tuple<double, double>>(
+                  value + (vel_j - vel_i) * kernel(r));
+              }));
       });
 
     double dt = ip.time_step;
@@ -440,7 +460,7 @@ int main(int argc, char** argv)
     cl.pair_interact(
       col.begin<tag::pred_position>()
       , col.end<tag::pred_position>()
-      , [=] __device__ (int i, cell_list::neighbour_list nl)
+      , PARTICLE_LAMBDA_DEVICE(int i, cell_list::neighbour_list nl)
       {
         using particle::geometry::as;
         auto pos_i = *(pred_position_first + i);
@@ -448,7 +468,7 @@ int main(int argc, char** argv)
           i
           , pos_i
           , 0.0
-          , [=] __device__ (int i, int j, double& value)
+          , PARTICLE_LAMBDA_DEVICE(int i, int j, double& value)
           {
             auto pos_j = *(pred_position_first + j);
             double r = particle::geometry::distance(pos_i, pos_j);
@@ -462,7 +482,7 @@ int main(int argc, char** argv)
       , col.end<tag::pnd>()
       , col.begin<tag::type>()
       , col.begin<tag::pressure>()
-      , PARTICLE_LAMBDA(double pnd, int t)
+      , PARTICLE_LAMBDA_DEVICE(double pnd, int t)
       {
         if (categories[t] == static_cast<int>(category_t::ghost))
           return 0.0;
@@ -492,7 +512,7 @@ int main(int argc, char** argv)
     cl.pair_interact(
       col.begin<tag::pred_position>()
       , col.end<tag::pred_position>()
-      , [=] __device__ (int i, cell_list::neighbour_list nl)
+      , PARTICLE_LAMBDA_DEVICE(int i, cell_list::neighbour_list nl)
       {
         using particle::geometry::as;
         int type_i = *(type_first + i);
@@ -500,23 +520,25 @@ int main(int argc, char** argv)
           return;
         auto pressure_i = *(pressure_first + i);
         auto pos_i = *(pred_position_first + i);
-        *(pressure_grad_first + i) = as<thrust::tuple<double, double>>(gradient_constant / densities[type_i] * nl.reduce(
-          i
-          , pos_i
-          , thrust::make_tuple(0.0, 0.0)
-          , [=] __device__ (int i, int j, thrust::tuple<double, double>& value)
-          {
-            int type_j = *(type_first + j);
-            if (categories[type_j] == static_cast<int>(category_t::ghost))
-              return;
-            auto pressure_j = *(pressure_first + j);
-            auto pos_j = *(pred_position_first + j);
-            auto d = pos_j - pos_i;
-            double rsq = particle::geometry::length_square(d);
-            double r = sqrt(rsq);
-            value = particle::geometry::as<thrust::tuple<double, double>>(
-              value + d * (pressure_j + pressure_i) / rsq * kernel(r));
-          }));
+        *(pressure_grad_first + i) =
+          as<thrust::tuple<double, double>>(
+            gradient_constant / densities[type_i] * nl.reduce(
+              i
+              , pos_i
+              , thrust::make_tuple(0.0, 0.0)
+              , PARTICLE_LAMBDA_DEVICE(int i, int j, thrust::tuple<double, double>& value)
+              {
+                int type_j = *(type_first + j);
+                if (categories[type_j] == static_cast<int>(category_t::ghost))
+                  return;
+                auto pressure_j = *(pressure_first + j);
+                auto pos_j = *(pred_position_first + j);
+                auto d = pos_j - pos_i;
+                double rsq = particle::geometry::length_square(d);
+                double r = sqrt(rsq);
+                value = particle::geometry::as<thrust::tuple<double, double>>(
+                  value + d * (pressure_j + pressure_i) / rsq * kernel(r));
+              }));
       });
 
     thrust::transform(

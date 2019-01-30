@@ -5,6 +5,8 @@
 #include <particle/geometry/elem.hpp>
 #include <particle/geometry/value_type.hpp>
 
+#pragma push
+#pragma diag_suppress = extra_semicolon
 // VTK headers
 #include <vtkCharArray.h>
 #include <vtkDoubleArray.h>
@@ -16,6 +18,7 @@
 #include <vtkUnsignedShortArray.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridWriter.h>
+#pragma pop
 
 // Boost headers
 #include <boost/fusion/adapted/mpl.hpp>

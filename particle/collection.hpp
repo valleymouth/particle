@@ -5,7 +5,10 @@
 
 // Boost headers
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
+#pragma push
+#pragma diag_suppress = probable_guiding_friend
 #include <boost/fusion/container/map.hpp>
+#pragma pop
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
