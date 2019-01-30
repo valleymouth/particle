@@ -16,16 +16,45 @@ namespace particle
 {
 namespace neighbour
 {
+  // TODO: Try CRTP to remove container dependency
   template <typename Grid, typename Index = int>
   class cell_list
   {
+  public:
     Grid m_grid;
     thrust::device_vector<Index> m_indices;
-    thrust::device_vector<Index> m_cell_ranges; // for each cell gives its first particle index
-  
+    thrust::device_vector<Index> m_cell_ranges; // for each cell stores its first particle index
+
   public:
+    struct neighbour_list
+    {
+      Grid grid;
+      typename thrust::device_vector<Index>::iterator ranges;
+      
+      template <typename Position, typename T, typename F>
+      __device__
+      auto reduce(Index i, const Position& p, const T& init, F f)
+      {
+        T result = init;
+        auto cell = grid.template get_cell_index<Index>(p);
+        for (Index yi = -1; yi <= 1; yi++)
+        {
+          for (Index xi = -1; xi <= 1; xi++)
+          {
+            Index index = grid.get_index(
+              particle::geometry::add(cell, thrust::make_tuple(xi, yi)));
+              for (Index j = *(ranges + index); j < *(ranges + index + 1); j++)
+              {
+                if (i != j)
+                  f(i, j, result);
+              }
+          }
+        }
+        return result;
+      }
+    };
+
     cell_list(const Grid& grid): m_grid(grid) {}
-  
     template <typename InputIterator, typename RandomAccessIterator>
     void build(
       InputIterator position_first
@@ -64,30 +93,18 @@ namespace neighbour
     }
 
     template <typename InputIterator, typename F>
-    void pair_interact(InputIterator position_first, InputIterator position_last, F f)
+    void pair_interact(
+      InputIterator position_first
+      , InputIterator position_last
+      , F f)
     {
-      // local copy to be used inside lambda and prevent copy of *this
-      auto ranges = m_cell_ranges.begin();
-      auto grid = m_grid;
-
+      neighbour_list nl = {m_grid, m_cell_ranges.begin()};
       thrust::for_each(
         thrust::counting_iterator<Index>(0)
         , thrust::counting_iterator<Index>(position_last - position_first)
-        , PARTICLE_LAMBDA(Index i) {
-          auto position = position_first + i;
-          auto cell = grid.template get_cell_index<Index>(*position);
-          for (Index yi = -1; yi <= 1; yi++)
-          {
-            for (Index xi = -1; xi <= 1; xi++)
-            {
-              Index index = grid.get_index(
-                particle::geometry::add(cell, thrust::make_tuple(xi, yi)));
-              for (Index j = *(ranges + index); j < *(ranges + index + 1); j++)
-              {
-                f(i, j);
-              }
-            }
-          }
+        , [=] __device__ (Index i)
+        {
+          f(i, nl);
         });
     }
   };
