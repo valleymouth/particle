@@ -12,6 +12,7 @@
 #include <particle/geometry/box.hpp>
 #include <particle/geometry/intersect.hpp>
 #include <particle/geometry/operators/add.hpp>
+#include <particle/geometry/operators/mul.hpp>
 
 #ifdef __CUDACC__
 using vec_type = int3;
@@ -24,6 +25,7 @@ BOOST_AUTO_TEST_CASE(as_vec_test)
   using particle::geometry::as;
   using particle::geometry::elem;
   using particle::geometry::operators::operator+;
+  using particle::geometry::operators::operator*;
  
   vec_type v0 = {1, 2, 3};
   vec_type v1 = {4, 5, 6};
@@ -36,6 +38,11 @@ BOOST_AUTO_TEST_CASE(as_vec_test)
   BOOST_CHECK_EQUAL(elem<0>(v3), 1);
   BOOST_CHECK_EQUAL(elem<1>(v3), 2);
   BOOST_CHECK_EQUAL(elem<2>(v3), 3);
+
+  vec_type v4 = as<vec_type>(10 * v0);
+  BOOST_CHECK_EQUAL(elem<0>(v4), 10);
+  BOOST_CHECK_EQUAL(elem<1>(v4), 20);
+  BOOST_CHECK_EQUAL(elem<2>(v4), 30);
 }
 
 BOOST_AUTO_TEST_CASE(as_box_test)

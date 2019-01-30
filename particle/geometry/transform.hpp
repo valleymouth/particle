@@ -74,7 +74,9 @@ namespace geometry
     template <typename T0, typename T1, typename F>
     struct dim<detail::binary_transform_t<T0, T1, F>>
     {
-      static constexpr int value = dim<T0>::value;
+      static constexpr int value =
+        boost::mpl::if_c<
+        dim<T0>::value >= dim<T1>::value, dim<T0>, dim<T1>>::type::value;
     };
 
     template <typename T0, typename T1, typename F>
