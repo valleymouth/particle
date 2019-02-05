@@ -16,34 +16,34 @@ namespace particle
 {
 namespace neighbour
 {
-  // TODO: Try CRTP to remove container dependency
-  template <typename Grid, typename Index = int>
+  template <typename Grid, typename Container>
   class cell_list
   {
-  public:
+    using index_type = typename Container::value_type;
+    
     Grid m_grid;
-    thrust::device_vector<Index> m_indices;
-    thrust::device_vector<Index> m_cell_ranges; // for each cell stores its first particle index
+    Container m_indices;
+    Container m_cell_ranges; // for each cell stores its first particle index
 
   public:
     struct neighbour_list
     {
       Grid grid;
-      typename thrust::device_vector<Index>::iterator ranges;
+      typename Container::iterator ranges;
       
       template <typename Position, typename T, typename F>
       __device__
-      auto reduce(Index i, const Position& p, const T& init, F f)
+      auto reduce(index_type i, const Position& p, const T& init, F f)
       {
         T result = init;
-        auto cell = grid.template get_cell_index<Index>(p);
-        for (Index yi = -1; yi <= 1; yi++)
+        auto cell = grid.template get_cell_index<index_type>(p);
+        for (index_type yi = -1; yi <= 1; yi++)
         {
-          for (Index xi = -1; xi <= 1; xi++)
+          for (index_type xi = -1; xi <= 1; xi++)
           {
-            Index index = grid.get_index(
+            index_type index = grid.get_index(
               particle::geometry::add(cell, thrust::make_tuple(xi, yi)));
-              for (Index j = *(ranges + index); j < *(ranges + index + 1); j++)
+              for (index_type j = *(ranges + index); j < *(ranges + index + 1); j++)
               {
                 if (i != j)
                   f(i, j, result);
@@ -73,7 +73,7 @@ namespace neighbour
         , position_last
         , m_indices.begin()
         , PARTICLE_LAMBDA (const value_type& x)
-        { return grid.get_index(grid.template get_cell_index<Index>(x)); });
+        { return grid.get_index(grid.template get_cell_index<index_type>(x)); });
 
       // sort collection based on cell indices
       thrust::sort_by_key(m_indices.begin(), m_indices.end(), attrs_first);
@@ -87,8 +87,8 @@ namespace neighbour
       thrust::upper_bound(
         m_indices.begin()
         , m_indices.end()
-        , thrust::counting_iterator<Index>(0)
-        , thrust::counting_iterator<Index>(cell_count)
+        , thrust::counting_iterator<index_type>(0)
+        , thrust::counting_iterator<index_type>(cell_count)
         , m_cell_ranges.begin() + 1);
     }
 
@@ -100,9 +100,9 @@ namespace neighbour
     {
       neighbour_list nl = {m_grid, m_cell_ranges.begin()};
       thrust::for_each(
-        thrust::counting_iterator<Index>(0)
-        , thrust::counting_iterator<Index>(position_last - position_first)
-        , [=] __device__ (Index i)
+        thrust::counting_iterator<index_type>(0)
+        , thrust::counting_iterator<index_type>(position_last - position_first)
+        , [=] __device__ (index_type i)
         {
           f(i, nl);
         });

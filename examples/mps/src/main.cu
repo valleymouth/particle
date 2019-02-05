@@ -162,7 +162,8 @@ struct input_params
 };
 
 template <class ForwardIterator>
-void random_fill(ForwardIterator begin, ForwardIterator end, double lower, double upper)
+void random_fill(
+  ForwardIterator begin, ForwardIterator end, double lower, double upper)
 {
   static boost::random::mt11213b rng;
   boost::random::uniform_real_distribution<> dist(lower, upper);
@@ -305,14 +306,17 @@ int main(int argc, char** argv)
                   std::ceil(ip.upper[1] / ip.cell_size) + 1))
     , ip.cell_size);
 
-  using cell_list = particle::neighbour::cell_list<decltype(grid)>;
+  using cell_list = particle::neighbour::cell_list<
+    decltype(grid), thrust::device_vector<int>>;
   cell_list cl(grid);
 
   const int dimensions = 2;
   const auto kernel = particle::mps::rational_kernel<double>(ip.cutoff);
   const double dbp = ip.distance_between_particles;
-  const double pnd0 = particle::mps::pnd0<2>(dbp, static_cast<double>(ip.cutoff), kernel);
-  const double lambda = particle::mps::lambda<2>(dbp, static_cast<double>(ip.cutoff), pnd0, kernel);
+  const double pnd0 = particle::mps::pnd0<2>(
+    dbp, static_cast<double>(ip.cutoff), kernel);
+  const double lambda = particle::mps::lambda<2>(
+    dbp, static_cast<double>(ip.cutoff), pnd0, kernel);
 
   const double laplacian_constant = 2 * dimensions / (lambda * pnd0);
   const double gradient_constant = dimensions / pnd0;
@@ -349,10 +353,13 @@ int main(int argc, char** argv)
     , [](auto t) { return t.second.viscosity; });
   cudaMemcpyToSymbol(viscosities, h_viscosities, ip.types.size() * sizeof(double));
 
-  using output_tags = boost::mpl::vector<tag::id, tag::type, tag::x, tag::y, tag::vx, tag::vy, tag::pnd, tag::pressure>;
+  using output_tags = boost::mpl::vector<
+    tag::id, tag::type, tag::x, tag::y, tag::vx, tag::vy, tag::pnd, tag::pressure>;
 
   {
-    thrust::copy(col.begin<output_tags>(), col.end<output_tags>(), h_col.begin<output_tags>());    std::stringstream ss;
+    thrust::copy(
+      col.begin<output_tags>(), col.end<output_tags>(), h_col.begin<output_tags>());
+    std::stringstream ss;
     ss << ip.output_filename << "_0.vtu";
     particle::io::vtk::save(
       ss.str()
@@ -410,7 +417,8 @@ int main(int argc, char** argv)
               i
               , pos_i
               , as<thrust::tuple<double, double>>(acc_i)
-              , PARTICLE_LAMBDA_DEVICE(int i, int j, thrust::tuple<double, double>& value)
+              , PARTICLE_LAMBDA_DEVICE(
+                int i, int j, thrust::tuple<double, double>& value)
               {
                 int type_j = *(type_first + j);
                 if (categories[type_j] == static_cast<int>(category_t::ghost))
@@ -526,7 +534,8 @@ int main(int argc, char** argv)
               i
               , pos_i
               , thrust::make_tuple(0.0, 0.0)
-              , PARTICLE_LAMBDA_DEVICE(int i, int j, thrust::tuple<double, double>& value)
+              , PARTICLE_LAMBDA_DEVICE(
+                int i, int j, thrust::tuple<double, double>& value)
               {
                 int type_j = *(type_first + j);
                 if (categories[type_j] == static_cast<int>(category_t::ghost))
@@ -562,12 +571,14 @@ int main(int argc, char** argv)
         const thrust::tuple<double, double>& pos
         , const thrust::tuple<double, double>& grad)
       {
-        return particle::geometry::as<thrust::tuple<double, double>>(pos - grad * dt * dt);
+        return particle::geometry::as<thrust::tuple<double, double>>(
+          pos - grad * dt * dt);
       });
 
     if ((step + 1) % ip.steps_per_output == 0)
     {
-      thrust::copy(col.begin<output_tags>(), col.end<output_tags>(), h_col.begin<output_tags>());
+      thrust::copy(
+        col.begin<output_tags>(), col.end<output_tags>(), h_col.begin<output_tags>());
       std::stringstream ss;
       ss << ip.output_filename << "_" << step + 1 << ".vtu";
       particle::io::vtk::save(
