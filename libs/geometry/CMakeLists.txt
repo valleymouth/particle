@@ -91,15 +91,16 @@ target_link_libraries(sub_operator_test ${Boost_LIBRARIES})
 add_test(NAME sub_operator_test COMMAND sub_operator_test)
 
 # Adapted tests
-# add_executable(std_array_test test/adapted/std_array.cpp)
-# target_link_libraries(std_array_test ${Boost_LIBRARIES})
-# add_test(NAME std_array_test COMMAND std_array_test)
+add_executable(std_array_test test/adapted/std_array.cpp)
+target_link_libraries(std_array_test ${Boost_LIBRARIES})
+add_test(NAME std_array_test COMMAND std_array_test)
 
 find_package(CUDA)
 if(CUDA_FOUND)
   # GCC 6.0 is the latest version supported by NVCC
   set(CUDA_HOST_COMPILER gcc-6)
-
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -Wno-deprecated-declarations)
+  
   file(COPY test/add.cpp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/cuda)
   file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/add.cpp ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/add.cu)
   cuda_add_executable(add_test_cuda ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/add.cu)
@@ -227,27 +228,27 @@ if(CUDA_FOUND)
   add_test(NAME sub_operator_test_cuda COMMAND sub_operator_test_cuda)
 
   # Adapted tests
-  # cuda_add_executable(int2_test_cuda test/adapted/cuda/int2.cu)
-  # target_link_libraries(int2_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME int2_test_cuda COMMAND int2_test_cuda)
+  cuda_add_executable(int2_test_cuda test/adapted/cuda/int2.cu)
+  target_link_libraries(int2_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME int2_test_cuda COMMAND int2_test_cuda)
 
-  # cuda_add_executable(int3_test_cuda test/adapted/cuda/int3.cu)
-  # target_link_libraries(int3_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME int3_test_cuda COMMAND int3_test_cuda)
+  cuda_add_executable(int3_test_cuda test/adapted/cuda/int3.cu)
+  target_link_libraries(int3_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME int3_test_cuda COMMAND int3_test_cuda)
 
-  # cuda_add_executable(float2_test_cuda test/adapted/cuda/float2.cu)
-  # target_link_libraries(float2_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME float2_test_cuda COMMAND float2_test_cuda)
+  cuda_add_executable(float2_test_cuda test/adapted/cuda/float2.cu)
+  target_link_libraries(float2_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME float2_test_cuda COMMAND float2_test_cuda)
 
-  # cuda_add_executable(float3_test_cuda test/adapted/cuda/float3.cu)
-  # target_link_libraries(float3_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME float3_test_cuda COMMAND float3_test_cuda)
+  cuda_add_executable(float3_test_cuda test/adapted/cuda/float3.cu)
+  target_link_libraries(float3_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME float3_test_cuda COMMAND float3_test_cuda)
 
-  # cuda_add_executable(thrust_tuple_test_cuda test/adapted/cuda/thrust_tuple.cu)
-  # target_link_libraries(thrust_tuple_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME thrust_tuple_test_cuda COMMAND thrust_tuple_test_cuda)
+  cuda_add_executable(thrust_tuple_test_cuda test/adapted/cuda/thrust_tuple.cu)
+  target_link_libraries(thrust_tuple_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME thrust_tuple_test_cuda COMMAND thrust_tuple_test_cuda)
 
-  # cuda_add_executable(thrust_zip_iterator_test_cuda test/adapted/cuda/thrust_zip_iterator.cu)
-  # target_link_libraries(thrust_zip_iterator_test_cuda ${Boost_LIBRARIES})
-  # add_test(NAME thrust_zip_iterator_test_cuda COMMAND thrust_zip_iterator_test_cuda)
+  cuda_add_executable(thrust_zip_iterator_test_cuda test/adapted/cuda/thrust_zip_iterator.cu)
+  target_link_libraries(thrust_zip_iterator_test_cuda ${Boost_LIBRARIES})
+  add_test(NAME thrust_zip_iterator_test_cuda COMMAND thrust_zip_iterator_test_cuda)
 endif()

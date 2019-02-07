@@ -1,6 +1,9 @@
 // Boost test headers
+#pragma push
+#pragma diag_suppress = partial_override
 #define BOOST_TEST_MODULE geometry
 #include <boost/test/included/unit_test.hpp>
+#pragma pop
 
 // Particle headers
 #ifdef __CUDACC__

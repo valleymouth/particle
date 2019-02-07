@@ -18,6 +18,7 @@ find_package(CUDA)
 if(CUDA_FOUND)
   # GCC 6.0 is the latest version supported by NVCC
   set(CUDA_HOST_COMPILER gcc-6)
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -Wno-deprecated-declarations)
 
   file(COPY test/left.cpp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/cuda)
   file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/left.cpp ${CMAKE_CURRENT_BINARY_DIR}/test/cuda/left.cu)

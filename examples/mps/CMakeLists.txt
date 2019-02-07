@@ -10,6 +10,7 @@ include_directories(../..)
 
 # GCC 6.0 is the latest version supported by NVCC
 set(CMAKE_CUDA_HOST_COMPILER gcc-6)
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -Wno-deprecated-declarations)
 # If you need to disable a warning globaly use:
 # -Xcudafe \"--diag_suppress=esa_on_defaulted_function_ignored\""
 # A list of valid flags can be found at:
