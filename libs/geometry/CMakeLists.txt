@@ -98,7 +98,7 @@ add_test(NAME std_array_test COMMAND std_array_test)
 find_package(CUDA)
 if(CUDA_FOUND)
   # GCC 6.0 is the latest version supported by NVCC
-  set(CUDA_HOST_COMPILER gcc-6)
+  set(CUDA_HOST_COMPILER gcc)
   set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -Wno-deprecated-declarations)
   
   file(COPY test/add.cpp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/cuda)
