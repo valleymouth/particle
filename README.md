@@ -40,4 +40,4 @@ You can run the MPS example by using the input data in the examples/mps/data fol
 $ cd build
 $ ./examples/mps/mps -i ../examples/mps/data/dam_break_2d.xml
 ```
-
+The results can be visualised using [Paraview](https://www.paraview.org/).
