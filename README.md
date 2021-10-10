@@ -23,5 +23,13 @@ With those dependencies installed you should be able to compile the library with
 $ mkdir build
 $ cd build
 $ cmake ..
+$ make
 ```
 Latest test on a Debian 10 (buster), Boost 1.67, Cuda 11.4.2, VTK 7.1, gcc 8.3.0.
+
+## Test cases
+You can run all test cases running the following command inside the build folder:
+```
+$ make test
+```
+
