@@ -30,6 +30,14 @@ Latest test on a Debian 10 (buster), Boost 1.67, Cuda 11.4.2, VTK 7.1, gcc 8.3.0
 ## Test cases
 You can run all test cases running the following command inside the build folder:
 ```
+$ cd build
 $ make test
+```
+
+## Running example
+You can run the MPS example by using the input data in the examples/mps/data folder:
+```
+$ cd build
+$ ./mps -i ../examples/mps/data/dam_break_2d.xml
 ```
 
