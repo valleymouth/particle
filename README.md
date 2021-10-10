@@ -38,6 +38,6 @@ $ make test
 You can run the MPS example by using the input data in the examples/mps/data folder:
 ```
 $ cd build
-$ ./mps -i ../examples/mps/data/dam_break_2d.xml
+$ ./examples/mps/mps -i ../examples/mps/data/dam_break_2d.xml
 ```
 
